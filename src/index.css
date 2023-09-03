@@ -41,12 +41,12 @@ main {
     margin: 0;
 }
 
-.line-wrapper {
-    border: 2px solid green;
-    height: 20%;
-}
-
 footer {
     border: 2px solid orange;
     height: 100px;
+}
+
+#footer-wrapper {
+    border: 2px solid blue;
+    height: 100%;
 }
