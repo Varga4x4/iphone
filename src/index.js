@@ -1,69 +1,59 @@
-const MAIN_DATA = [
+const BUTTONS_ARRAY = [
     {
-        number: 1,
+        value: 1,
         characters: ""
     },
     {
-        number: 2,
+        value: 2,
         characters: "ABC"
     },
     {
-        number: 3,
+        value: 3,
         characters: "DEF"
     },
     {
-        number: 4,
+        value: 4,
         characters: "GHI"
     },
     {
-        number: 5,
+        value: 5,
         characters: "JKL"
     },
     {
-        number: 6,
+        value: 6,
         characters: "MNO"
     },
     {
-        number: 7,
+        value: 7,
         characters: "PQRS"
     },
     {
-        number: 8,
+        value: 8,
         characters: "TUV"
     },
     {
-        number: 9,
+        value: 9,
         characters: "WXYZ"
     },
     {
-        number: "*",
+        value: "*",
         characters: ""
     },
     {
-        number: 0,
+        value: 0,
         characters: "+"
     },
     {
-        number: "#",
+        value: "#",
         characters: ""
-    }
-]
-
-const FOOTER_DATA = [
-    {
-        name: "Favourites"
     },
     {
-        name: "Recents"
+        value: "Call",
+        characters: ""
     },
     {
-        name: "Contacts"
-    },
-    {
-        name: "Keypad"
-    },
-    {
-        name: "Voicemail"
+        value: "X",
+        characters: ""
     }
 ]
 
@@ -75,18 +65,20 @@ const FOOTER_DATA = [
         addNumberElement.innerText = "Add Number"
 
         // MAIN
-        const mainElement = document.createElement("main")
-        const buttonWrapperElement = document.createElement("div")
-        buttonWrapperElement.id = "button-wrapper"
+        const mainElement = document.querySelector("main")
 
-        headerElement.appendChild(mainElement)
-        mainElement.appendChild(buttonWrapperElement)
+        BUTTONS_ARRAY.forEach((button, index) => {
+            const dialButtonElement = document.createElement("div")
+            dialButtonElement.className = "dial-button"
 
-        // FOOTER
-        const footerElement = document.createElement("footer")
-        const footerWrapperElement = document.createElement("div")
-        footerWrapperElement.id = "footer-wrapper"
+            const buttonValueElement = document.createElement('h2')
+            buttonValueElement.innerHTML = button.value
+            dialButtonElement.appendChild(buttonValueElement)
 
-        mainElement.appendChild(footerElement)
-        footerElement.appendChild(footerWrapperElement)
+            const buttonCharactersElement = document.createElement('p')
+            buttonCharactersElement.innerHTML = button.characters
+            dialButtonElement.appendChild(buttonCharactersElement)
+
+            mainElement.appendChild(dialButtonElement)
+        })
     })()
