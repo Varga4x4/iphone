@@ -43,12 +43,6 @@ const BUTTONS_ARRAY = [
     },
     {
         value: "#",
-    },
-    {
-        value: "Call",
-    },
-    {
-        value: "X",
     }
 ]
 
@@ -57,40 +51,48 @@ const BUTTONS_ARRAY = [
         const headerElement = document.querySelector("header")
         const addNumberElement = document.querySelector("p")
         addNumberElement.innerText = "Add Number"
-
-        const handleDisplayElement = () => {
-            const displayElement = document.getElementById("display")
-            console.log(displayElement)
-        }
+        addNumberElement.style.visibility = "hidden"
 
         // MAIN
-
         const mainElement = document.querySelector("main")
+        const callDeleteWrapperElement = document.getElementById("call-delete-wrapper")
+        const callButtonElement = document.getElementById("call-button")
+        callButtonElement.style.visibility = "hidden"
+        const deleteButtonElement = document.getElementById("delete-button")
+        deleteButtonElement.style.visibility = "hidden"
+
         const numbersToDisplay = []
 
         BUTTONS_ARRAY.forEach((button, index) => {
-            const handleDialButtonOnClick = () => {
-                numbersToDisplay.push(buttonValueElement.innerHTML)
-                console.log(numbersToDisplay)
+            const handleDisplayElement = () => {
+                const displayElement = document.getElementById("display")
+                displayElement.innerHTML = numbersToDisplay.join("")
+
+                addNumberElement.style.visibility = "visible"
+
+                if (numbersToDisplay.length > 0) {
+                    callButtonElement.style.visibility = "visible"
+                    deleteButtonElement.style.visibility = "visible"
+                }
             }
-            const dialButtonElement = document.createElement("div")
+
+            const dialButtonElement = document.createElement("button")
             dialButtonElement.className = "dial-button"
-            dialButtonElement.onclick = handleDialButtonOnClick
+            dialButtonElement.onclick = () => {
+                numbersToDisplay.push(buttonValueElement.innerHTML)
+                handleDisplayElement()
+            }
 
             const buttonValueElement = document.createElement('h2')
             buttonValueElement.innerHTML = button.value
             dialButtonElement.appendChild(buttonValueElement)
 
-            const buttonCharactersElement = document.createElement('p')
-            buttonCharactersElement.innerHTML = button.characters
             if (button.characters !== undefined) {
+                const buttonCharactersElement = document.createElement('p')
+                buttonCharactersElement.innerHTML = button.characters
                 dialButtonElement.appendChild(buttonCharactersElement)
             }
 
             mainElement.appendChild(dialButtonElement)
-
         })
-        handleDisplayElement()
-
-
     })()
