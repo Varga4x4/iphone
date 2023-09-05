@@ -1,7 +1,6 @@
 const BUTTONS_ARRAY = [
     {
         value: 1,
-        characters: ""
     },
     {
         value: 2,
@@ -37,7 +36,6 @@ const BUTTONS_ARRAY = [
     },
     {
         value: "*",
-        characters: ""
     },
     {
         value: 0,
@@ -45,31 +43,39 @@ const BUTTONS_ARRAY = [
     },
     {
         value: "#",
-        characters: ""
     },
     {
         value: "Call",
-        characters: ""
     },
     {
         value: "X",
-        characters: ""
     }
 ]
 
     ; (() => {
-
         // HEADER
         const headerElement = document.querySelector("header")
         const addNumberElement = document.querySelector("p")
         addNumberElement.innerText = "Add Number"
 
+        const handleDisplayElement = () => {
+            const displayElement = document.getElementById("display")
+            console.log(displayElement)
+        }
+
         // MAIN
+
         const mainElement = document.querySelector("main")
+        const numbersToDisplay = []
 
         BUTTONS_ARRAY.forEach((button, index) => {
+            const handleDialButtonOnClick = () => {
+                numbersToDisplay.push(buttonValueElement.innerHTML)
+                console.log(numbersToDisplay)
+            }
             const dialButtonElement = document.createElement("div")
             dialButtonElement.className = "dial-button"
+            dialButtonElement.onclick = handleDialButtonOnClick
 
             const buttonValueElement = document.createElement('h2')
             buttonValueElement.innerHTML = button.value
@@ -77,8 +83,14 @@ const BUTTONS_ARRAY = [
 
             const buttonCharactersElement = document.createElement('p')
             buttonCharactersElement.innerHTML = button.characters
-            dialButtonElement.appendChild(buttonCharactersElement)
+            if (button.characters !== undefined) {
+                dialButtonElement.appendChild(buttonCharactersElement)
+            }
 
             mainElement.appendChild(dialButtonElement)
+
         })
+        handleDisplayElement()
+
+
     })()
