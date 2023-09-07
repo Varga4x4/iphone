@@ -47,6 +47,8 @@ const BUTTONS_ARRAY = [
 ]
 
     ; (() => {
+        const displayElement = document.getElementById("display")
+
         // HEADER
         const headerElement = document.querySelector("header")
         const addNumberElement = document.querySelector("p")
@@ -65,7 +67,6 @@ const BUTTONS_ARRAY = [
 
         BUTTONS_ARRAY.forEach((button, index) => {
             const handleDisplayElement = () => {
-                const displayElement = document.getElementById("display")
                 displayElement.innerHTML = numbersToDisplay.join("")
 
                 addNumberElement.style.visibility = "visible"
@@ -78,13 +79,22 @@ const BUTTONS_ARRAY = [
 
             const dialButtonElement = document.createElement("button")
             dialButtonElement.className = "dial-button"
+
             dialButtonElement.onclick = () => {
                 numbersToDisplay.push(buttonValueElement.innerHTML)
                 handleDisplayElement()
             }
 
-            const buttonValueElement = document.createElement('h2')
+            deleteButtonElement.onclick = () => {
+                const alfa = numbersToDisplay.slice(0, numbersToDisplay.length - 1).join("")
+                console.log({ alfa })
+                console.log(numbersToDisplay)
+                handleDisplayElement()
+            }
+
+            const buttonValueElement = document.createElement('p')
             buttonValueElement.innerHTML = button.value
+            buttonValueElement.className = "dial-values"
             dialButtonElement.appendChild(buttonValueElement)
 
             if (button.characters !== undefined) {
