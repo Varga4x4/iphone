@@ -47,49 +47,54 @@ const BUTTONS_ARRAY = [
 ]
 
     ; (() => {
-        const displayElement = document.getElementById("display")
-
-        // HEADER
+        // ELEMENTS
         const headerElement = document.querySelector("header")
         const addNumberElement = document.querySelector("p")
+        const displayElement = document.getElementById("display")
+        const mainElement = document.querySelector("main")
+        const callButtonElement = document.getElementById("call-button")
+        const deleteButtonElement = document.getElementById("delete-button")
+        const dialButtonsElement = document.getElementById("dial-buttons")
+
+        // HELPERS
+        const renderDisplay = (numberToAdd) => {
+            const oldValue = displayElement.innerHTML;
+            let newValue
+            if (numberToAdd) {
+                newValue = oldValue + numberToAdd
+            } else {
+                newValue = oldValue.slice(0, oldValue.length - 1)
+            }
+
+            displayElement.innerHTML = newValue
+
+            addNumberElement.style.visibility = "visible"
+
+            if (newValue.length) {
+                deleteButtonElement.style.visibility = "visible"
+            }
+        }
+
+
+
+        // ADD_NUMBER_ELEMENT
         addNumberElement.innerText = "Add Number"
         addNumberElement.style.visibility = "hidden"
 
-        // MAIN
-        const mainElement = document.querySelector("main")
-        const callDeleteWrapperElement = document.getElementById("call-delete-wrapper")
-        const callButtonElement = document.getElementById("call-button")
-        callButtonElement.style.visibility = "hidden"
-        const deleteButtonElement = document.getElementById("delete-button")
+        // DELETE_BUTTON_ELEMENT
         deleteButtonElement.style.visibility = "hidden"
+        deleteButtonElement.onclick = () => {
+            renderDisplay(undefined)
+        }
 
-        const numbersToDisplay = []
-
-        BUTTONS_ARRAY.forEach((button, index) => {
-            const handleDisplayElement = () => {
-                displayElement.innerHTML = numbersToDisplay.join("")
-
-                addNumberElement.style.visibility = "visible"
-
-                if (numbersToDisplay.length > 0) {
-                    callButtonElement.style.visibility = "visible"
-                    deleteButtonElement.style.visibility = "visible"
-                }
-            }
-
+        BUTTONS_ARRAY.forEach((button) => {
             const dialButtonElement = document.createElement("button")
             dialButtonElement.className = "dial-button"
 
             dialButtonElement.onclick = () => {
-                numbersToDisplay.push(buttonValueElement.innerHTML)
-                handleDisplayElement()
-            }
-
-            deleteButtonElement.onclick = () => {
-                const alfa = numbersToDisplay.slice(0, numbersToDisplay.length - 1).join("")
-                console.log({ alfa })
-                console.log(numbersToDisplay)
-                handleDisplayElement()
+                const numberToAdd = buttonValueElement.innerHTML
+                console.log(numberToAdd)
+                renderDisplay(numberToAdd)
             }
 
             const buttonValueElement = document.createElement('p')
@@ -103,6 +108,6 @@ const BUTTONS_ARRAY = [
                 dialButtonElement.appendChild(buttonCharactersElement)
             }
 
-            mainElement.appendChild(dialButtonElement)
+            dialButtonsElement.appendChild(dialButtonElement)
         })
     })()
