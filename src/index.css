@@ -69,6 +69,8 @@ main {
 
 #call-button {
     grid-column: 2;
+    background-color: green;
+    color: white;
 }
 
 .dial-button {

@@ -1,26 +1,32 @@
 const BUTTONS_ARRAY = [
     {
         value: 1,
+        inCallButtons: "mute"
     },
     {
         value: 2,
-        characters: "ABC"
+        characters: "ABC",
+        inCallButtons: "keypad"
     },
     {
         value: 3,
-        characters: "DEF"
+        characters: "DEF",
+        inCallButtons: "speaker"
     },
     {
         value: 4,
-        characters: "GHI"
+        characters: "GHI",
+        inCallButtons: "add call"
     },
     {
         value: 5,
-        characters: "JKL"
+        characters: "JKL",
+        inCallButtons: "FaceTime"
     },
     {
         value: 6,
-        characters: "MNO"
+        characters: "MNO",
+        inCallButtons: "contacts"
     },
     {
         value: 7,
@@ -64,6 +70,7 @@ const BUTTONS_ARRAY = [
                 newValue = oldValue + numberToAdd
             } else {
                 newValue = oldValue.slice(0, oldValue.length - 1)
+
             }
 
             displayElement.innerHTML = newValue
@@ -72,19 +79,32 @@ const BUTTONS_ARRAY = [
 
             if (newValue.length) {
                 deleteButtonElement.style.visibility = "visible"
+            } else {
+                deleteButtonElement.style.visibility = "hidden"
+                addNumberElement.style.visibility = "hidden"
             }
         }
 
+        const renderDials = () => {
 
+        }
 
         // ADD_NUMBER_ELEMENT
         addNumberElement.innerText = "Add Number"
         addNumberElement.style.visibility = "hidden"
+        addNumberElement.onclick = () => {
+            console.log("a")
+        }
 
         // DELETE_BUTTON_ELEMENT
         deleteButtonElement.style.visibility = "hidden"
         deleteButtonElement.onclick = () => {
             renderDisplay(undefined)
+        }
+
+        // CALL_BUTTON_ELEMENT
+        callButtonElement.onclick = () => {
+            addNumberElement.innerText = "calling..."
         }
 
         BUTTONS_ARRAY.forEach((button) => {
@@ -93,7 +113,6 @@ const BUTTONS_ARRAY = [
 
             dialButtonElement.onclick = () => {
                 const numberToAdd = buttonValueElement.innerHTML
-                console.log(numberToAdd)
                 renderDisplay(numberToAdd)
             }
 
