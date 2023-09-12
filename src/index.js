@@ -1,32 +1,26 @@
-const BUTTONS_ARRAY = [
+const DIAL_BUTTONS_ARRAY = [
     {
         value: 1,
-        inCallButtons: "mute"
     },
     {
         value: 2,
         characters: "ABC",
-        inCallButtons: "keypad"
     },
     {
         value: 3,
         characters: "DEF",
-        inCallButtons: "speaker"
     },
     {
         value: 4,
         characters: "GHI",
-        inCallButtons: "add call"
     },
     {
         value: 5,
         characters: "JKL",
-        inCallButtons: "FaceTime"
     },
     {
         value: 6,
         characters: "MNO",
-        inCallButtons: "contacts"
     },
     {
         value: 7,
@@ -52,15 +46,35 @@ const BUTTONS_ARRAY = [
     }
 ]
 
+const IN_CALL_BUTTONS_ARRAY = [
+    {
+        value: "mute"
+    },
+    {
+        value: "keypad"
+    },
+    {
+        value: "speaker"
+    },
+    {
+        value: "add call"
+    },
+    {
+        value: "FaceTime"
+    },
+    {
+        value: "contacts"
+    }
+]
+
     ; (() => {
         // ELEMENTS
-        const headerElement = document.querySelector("header")
         const addNumberElement = document.querySelector("p")
         const displayElement = document.getElementById("display")
-        const mainElement = document.querySelector("main")
         const callButtonElement = document.getElementById("call-button")
         const deleteButtonElement = document.getElementById("delete-button")
         const dialButtonsElement = document.getElementById("dial-buttons")
+        const callDeleteWrapperElement = document.getElementById("call-delete-wrapper")
 
         // HELPERS
         const renderDisplay = (numberToAdd) => {
@@ -85,8 +99,24 @@ const BUTTONS_ARRAY = [
             }
         }
 
-        const renderDials = () => {
+        const renderDialButtons = () => {
+            addNumberElement.innerText = "calling..."
 
+            document.querySelectorAll('.dial-button').forEach((oldButton) => oldButton.remove())
+
+            IN_CALL_BUTTONS_ARRAY.forEach((button) => {
+                const inCallButtonElement = document.createElement("button")
+                inCallButtonElement.className = "dial-button"
+                inCallButtonElement.innerHTML = button.value
+
+                dialButtonsElement.appendChild(inCallButtonElement)
+            })
+
+            const endButtonElement = document.createElement("button")
+            endButtonElement.className = "dial-button"
+            endButtonElement.innerHTML = "End"
+
+            callDeleteWrapperElement.appendChild(endButtonElement)
         }
 
         // ADD_NUMBER_ELEMENT
@@ -104,10 +134,10 @@ const BUTTONS_ARRAY = [
 
         // CALL_BUTTON_ELEMENT
         callButtonElement.onclick = () => {
-            addNumberElement.innerText = "calling..."
+            renderDialButtons()
         }
 
-        BUTTONS_ARRAY.forEach((button) => {
+        DIAL_BUTTONS_ARRAY.forEach((button) => {
             const dialButtonElement = document.createElement("button")
             dialButtonElement.className = "dial-button"
 
@@ -128,5 +158,6 @@ const BUTTONS_ARRAY = [
             }
 
             dialButtonsElement.appendChild(dialButtonElement)
+
         })
     })()
