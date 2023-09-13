@@ -79,6 +79,10 @@ const IN_CALL_BUTTONS_ARRAY = [
         const appElement = document.getElementById("app")
         const mainElement = document.querySelector("main")
 
+        console.log("disp", displayElement.innerHTML)
+
+        let alfa = false
+
         // HELPERS
         const renderDisplay = (numberToAdd) => {
             const oldValue = displayElement.innerHTML;
@@ -87,7 +91,6 @@ const IN_CALL_BUTTONS_ARRAY = [
                 newValue = oldValue + numberToAdd
             } else {
                 newValue = oldValue.slice(0, oldValue.length - 1)
-
             }
 
             displayElement.innerHTML = newValue
@@ -97,6 +100,7 @@ const IN_CALL_BUTTONS_ARRAY = [
             if (newValue.length) {
                 deleteButtonElement.style.visibility = "visible"
                 callButtonElement.onclick = () => {
+                    console.log(displayElement.innerHTML)
                     renderDialButtons()
                 }
             } else {
@@ -104,6 +108,8 @@ const IN_CALL_BUTTONS_ARRAY = [
                 addNumberElement.style.visibility = "hidden"
             }
         }
+
+
 
         const renderDialButtons = () => {
             addNumberElement.innerText = "calling..."
@@ -140,6 +146,9 @@ const IN_CALL_BUTTONS_ARRAY = [
 
             // END_BUTTON_ELEMENT
             endButtonElement.onclick = () => {
+                // displayElement.innerHTML = ""
+                console.log(displayElement.innerHTML)
+
                 document.querySelectorAll('.dial-button').forEach((oldButton) => oldButton.remove())
                 document.querySelectorAll("#end-button-element-wrapper").forEach((oldwrapper) => oldwrapper.remove())
 
@@ -153,12 +162,23 @@ const IN_CALL_BUTTONS_ARRAY = [
             }
         }
 
+
+
+        const renderAddNumber = () => {
+            const modalElement = document.createElement("div")
+            modalElement.id = "modal"
+            modalElement.style.visibility = "visible"
+
+            document.body.insertBefore(modalElement, appElement)
+        }
+
         const renderApp = () => {
+
             // ADD_NUMBER_ELEMENT
             addNumberElement.innerText = "Add Number"
             addNumberElement.style.visibility = "hidden"
             addNumberElement.onclick = () => {
-                console.log("a")
+                renderAddNumber()
             }
 
             // DELETE_BUTTON_ELEMENT
@@ -173,6 +193,7 @@ const IN_CALL_BUTTONS_ARRAY = [
 
                 dialButtonElement.onclick = () => {
                     const numberToAdd = buttonValueElement.innerHTML
+
                     renderDisplay(numberToAdd)
                 }
 
@@ -190,5 +211,6 @@ const IN_CALL_BUTTONS_ARRAY = [
                 dialButtonPadElement.appendChild(dialButtonElement)
             })
         }
+
         renderApp()
     })()
