@@ -106,11 +106,65 @@ footer {
 }
 
 #modal {
-    background: rgba(0, 0, 0, 0.5);
-    height: 100%;
-    width: 40%;
-    position: absolute;
+    background: lightgray;
+    height: 90%;
+    width: 45%;
+    position: fixed;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    border-radius: 20px;
+}
+
+#modal-control-wrapper {
+    border: 2px solid red;
+    height: 80px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+    background-color: aqua;
+    border-radius: 20px;
+}
+
+.modal-controls {
+    height: 50px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
+}
+
+#new-contact-element {
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+#add-photo-element-wrapper {
+    border: 2px solid blue;
+    height: 200px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+}
+
+#add-photo {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#add-details-element-wrapper {
+    border: 2px solid yellow;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.details {
+    width: 400px;
+    font-size: 30px;
 }

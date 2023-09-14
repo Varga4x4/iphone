@@ -79,10 +79,6 @@ const IN_CALL_BUTTONS_ARRAY = [
         const appElement = document.getElementById("app")
         const mainElement = document.querySelector("main")
 
-        console.log("disp", displayElement.innerHTML)
-
-        let alfa = false
-
         // HELPERS
         const renderDisplay = (numberToAdd) => {
             const oldValue = displayElement.innerHTML;
@@ -99,17 +95,18 @@ const IN_CALL_BUTTONS_ARRAY = [
 
             if (newValue.length) {
                 deleteButtonElement.style.visibility = "visible"
-                callButtonElement.onclick = () => {
-                    console.log(displayElement.innerHTML)
-                    renderDialButtons()
-                }
+
             } else {
                 deleteButtonElement.style.visibility = "hidden"
                 addNumberElement.style.visibility = "hidden"
             }
+
+            callButtonElement.onclick = () => {
+                if (newValue.length) {
+                    renderDialButtons()
+                }
+            }
         }
-
-
 
         const renderDialButtons = () => {
             addNumberElement.innerText = "calling..."
@@ -146,10 +143,9 @@ const IN_CALL_BUTTONS_ARRAY = [
 
             // END_BUTTON_ELEMENT
             endButtonElement.onclick = () => {
-                // displayElement.innerHTML = ""
-                console.log(displayElement.innerHTML)
+                displayElement.innerHTML = ""
 
-                document.querySelectorAll('.dial-button').forEach((oldButton) => oldButton.remove())
+                document.querySelectorAll(".dial-button").forEach((oldButton) => oldButton.remove())
                 document.querySelectorAll("#end-button-element-wrapper").forEach((oldwrapper) => oldwrapper.remove())
 
                 mainElement.appendChild(callDeleteWrapperElement)
@@ -162,18 +158,79 @@ const IN_CALL_BUTTONS_ARRAY = [
             }
         }
 
-
-
         const renderAddNumber = () => {
             const modalElement = document.createElement("div")
             modalElement.id = "modal"
             modalElement.style.visibility = "visible"
 
+            const modalControlWrapperElement = document.createElement("div")
+            modalControlWrapperElement.id = "modal-control-wrapper"
+
+            const cancelButtonElement = document.createElement("button")
+            cancelButtonElement.innerHTML = "Cancel"
+            cancelButtonElement.className = "modal-controls"
+            cancelButtonElement.onclick = () => {
+                modalElement.style.visibility = "hidden"
+            }
+
+            const newContactElement = document.createElement("p")
+            newContactElement.innerHTML = "New Contact"
+            newContactElement.id = "new-contact-element"
+
+            const doneButttonElement = document.createElement("button")
+            doneButttonElement.innerHTML = "Done"
+            doneButttonElement.className = "modal-controls"
+            doneButttonElement.onclick = () => {
+                modalElement.style.visibility = "hidden"
+            }
+
+            const addPhotoElementWrapper = document.createElement("div")
+            addPhotoElementWrapper.id = "add-photo-element-wrapper"
+
+            const addPhotoElement = document.createElement("p")
+            addPhotoElement.innerHTML = "Add Photo"
+            addPhotoElement.id = "add-photo"
+            addPhotoElement.onclick = () => {
+                console.log("Select photo from Gallery")
+            }
+
+            const addDetailsElementWrapper = document.createElement("div")
+            addDetailsElementWrapper.id = "add-details-element-wrapper"
+
+            const firstNameElement = document.createElement("input")
+            firstNameElement.className = "details"
+            firstNameElement.placeholder = "First name"
+            firstNameElement.setAttribute("type", "text")
+
+            const lastNameElement = document.createElement("input")
+            lastNameElement.className = "details"
+            lastNameElement.placeholder = "Last name"
+            lastNameElement.setAttribute("type", "text")
+
+            const phoneNumberElement = document.createElement("input")
+            phoneNumberElement.className = "details"
+            phoneNumberElement.value = displayElement.innerHTML
+
+            const emailElement = document.createElement("input")
+            emailElement.className = "details"
+            emailElement.placeholder = "E-mail"
+            emailElement.setAttribute("type", "email")
+
             document.body.insertBefore(modalElement, appElement)
+            modalElement.appendChild(modalControlWrapperElement)
+            modalControlWrapperElement.appendChild(cancelButtonElement)
+            modalControlWrapperElement.appendChild(newContactElement)
+            modalControlWrapperElement.appendChild(doneButttonElement)
+            modalElement.appendChild(addPhotoElementWrapper)
+            addPhotoElementWrapper.appendChild(addPhotoElement)
+            modalElement.appendChild(addDetailsElementWrapper)
+            addDetailsElementWrapper.appendChild(firstNameElement)
+            addDetailsElementWrapper.appendChild(lastNameElement)
+            addDetailsElementWrapper.appendChild(phoneNumberElement)
+            addDetailsElementWrapper.appendChild(emailElement)
         }
 
         const renderApp = () => {
-
             // ADD_NUMBER_ELEMENT
             addNumberElement.innerText = "Add Number"
             addNumberElement.style.visibility = "hidden"
@@ -190,6 +247,7 @@ const IN_CALL_BUTTONS_ARRAY = [
             DIAL_BUTTONS_ARRAY.forEach((button) => {
                 const dialButtonElement = document.createElement("button")
                 dialButtonElement.className = "dial-button"
+                dialButtonElement.id = "hal"
 
                 dialButtonElement.onclick = () => {
                     const numberToAdd = buttonValueElement.innerHTML
