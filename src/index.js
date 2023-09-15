@@ -67,6 +67,8 @@ const IN_CALL_BUTTONS_ARRAY = [
     }
 ]
 
+const CONTACTS = []
+
     ; (() => {
         // ELEMENTS
         const addNumberElement = document.querySelector("p")
@@ -75,9 +77,19 @@ const IN_CALL_BUTTONS_ARRAY = [
         const deleteButtonElement = document.getElementById("delete-button")
         const dialButtonPadElement = document.getElementById("dial-button-pad")
         const callDeleteWrapperElement = document.getElementById("call-delete-wrapper")
+        const headerElement = document.querySelector("header")
         const footerElement = document.querySelector("footer")
         const appElement = document.getElementById("app")
         const mainElement = document.querySelector("main")
+        const favouritesButtonElement = document.getElementById("favourites")
+        const recentsButtonElement = document.getElementById("recents")
+        const contactsButtonElement = document.getElementById("contacts")
+        const keypadButtonElement = document.getElementById("keypad")
+        const voicemailButtonElement = document.getElementById("voicemail")
+        const firstNameElement = document.getElementById("first-name")
+        const lastNameElement = document.getElementById("last-name")
+        const phoneNumberElement = document.getElementById("phone-number")
+        const emailElement = document.getElementById("email")
 
         // HELPERS
         const renderDisplay = (numberToAdd) => {
@@ -171,17 +183,27 @@ const IN_CALL_BUTTONS_ARRAY = [
             cancelButtonElement.className = "modal-controls"
             cancelButtonElement.onclick = () => {
                 modalElement.style.visibility = "hidden"
+                firstNameElement.value = ""
+                lastNameElement.value = ""
+                emailElement.value = ""
             }
 
-            const newContactElement = document.createElement("p")
-            newContactElement.innerHTML = "New Contact"
-            newContactElement.id = "new-contact-element"
+            const newContactTitleElement = document.createElement("p")
+            newContactTitleElement.innerHTML = "New Contact"
+            newContactTitleElement.className = "new-contact"
 
             const doneButttonElement = document.createElement("button")
             doneButttonElement.innerHTML = "Done"
             doneButttonElement.className = "modal-controls"
             doneButttonElement.onclick = () => {
                 modalElement.style.visibility = "hidden"
+                const newContact = {}
+                newContact.firstName = firstNameElement.value
+                newContact.lastName = lastNameElement.value
+                newContact.phoneNumber = phoneNumberElement.value
+                newContact.eMail = emailElement.value
+
+                CONTACTS.push(newContact)
             }
 
             const addPhotoElementWrapper = document.createElement("div")
@@ -198,20 +220,24 @@ const IN_CALL_BUTTONS_ARRAY = [
             addDetailsElementWrapper.id = "add-details-element-wrapper"
 
             const firstNameElement = document.createElement("input")
+            firstNameElement.id = "first-name"
             firstNameElement.className = "details"
             firstNameElement.placeholder = "First name"
             firstNameElement.setAttribute("type", "text")
 
             const lastNameElement = document.createElement("input")
+            lastNameElement.id = "last-name"
             lastNameElement.className = "details"
             lastNameElement.placeholder = "Last name"
             lastNameElement.setAttribute("type", "text")
 
             const phoneNumberElement = document.createElement("input")
+            phoneNumberElement.id = "phone-number"
             phoneNumberElement.className = "details"
             phoneNumberElement.value = displayElement.innerHTML
 
             const emailElement = document.createElement("input")
+            emailElement.id = "email"
             emailElement.className = "details"
             emailElement.placeholder = "E-mail"
             emailElement.setAttribute("type", "email")
@@ -219,7 +245,7 @@ const IN_CALL_BUTTONS_ARRAY = [
             document.body.insertBefore(modalElement, appElement)
             modalElement.appendChild(modalControlWrapperElement)
             modalControlWrapperElement.appendChild(cancelButtonElement)
-            modalControlWrapperElement.appendChild(newContactElement)
+            modalControlWrapperElement.appendChild(newContactTitleElement)
             modalControlWrapperElement.appendChild(doneButttonElement)
             modalElement.appendChild(addPhotoElementWrapper)
             addPhotoElementWrapper.appendChild(addPhotoElement)
@@ -228,6 +254,70 @@ const IN_CALL_BUTTONS_ARRAY = [
             addDetailsElementWrapper.appendChild(lastNameElement)
             addDetailsElementWrapper.appendChild(phoneNumberElement)
             addDetailsElementWrapper.appendChild(emailElement)
+        }
+
+        const renderFavourites = () => {
+
+        }
+
+        const renderRecents = () => {
+
+        }
+
+        const renderContacts = () => {
+            document.querySelectorAll('header').forEach((oldHeader) => oldHeader.remove())
+            document.querySelectorAll('main').forEach((oldMain) => oldMain.remove())
+            document.querySelectorAll('footer').forEach((oldFooter) => oldFooter.remove())
+
+            const contactsHeaderElement = document.createElement("div")
+            contactsHeaderElement.id = "contacts-header-element"
+
+            const backButtonElement = document.createElement("button")
+            backButtonElement.innerHTML = "Back"
+            backButtonElement.className = "contacts-controls"
+            backButtonElement.onclick = () => {
+                document.querySelectorAll("#contacts-header-element").forEach((oldHeader) => oldHeader.remove())
+
+                appElement.appendChild(headerElement)
+                appElement.appendChild(mainElement)
+                mainElement.appendChild(callDeleteWrapperElement)
+                callDeleteWrapperElement.appendChild(callButtonElement)
+                callDeleteWrapperElement.appendChild(deleteButtonElement)
+                appElement.appendChild(footerElement)
+            }
+
+            const contactsTitleElement = document.createElement("p")
+            contactsTitleElement.id = "contacts-title"
+            contactsTitleElement.innerHTML = "Contacts"
+
+            const plusButtonElement = document.createElement("button")
+            plusButtonElement.innerHTML = "+"
+            plusButtonElement.className = "contacts-controls"
+            plusButtonElement.onclick = () => {
+                renderAddNumber()
+            }
+
+            appElement.appendChild(contactsHeaderElement)
+            contactsHeaderElement.appendChild(backButtonElement)
+            contactsHeaderElement.appendChild(contactsTitleElement)
+            contactsHeaderElement.appendChild(plusButtonElement)
+
+            CONTACTS.forEach((person) => {
+                console.log(person)
+                const contactElement = document.createElement("div")
+                contactElement.id = "contact-element"
+                contactElement.innerHTML = person.firstName + " " + person.lastName
+
+                appElement.appendChild(contactElement)
+            })
+        }
+
+        const renderKeypad = () => {
+
+        }
+
+        const renderVoicemail = () => {
+
         }
 
         const renderApp = () => {
@@ -242,6 +332,31 @@ const IN_CALL_BUTTONS_ARRAY = [
             deleteButtonElement.style.visibility = "hidden"
             deleteButtonElement.onclick = () => {
                 renderDisplay(undefined)
+            }
+
+            // FAVOURITES_BUTTON_ELEMENT
+            favouritesButtonElement.onclick = () => {
+                renderFavourites()
+            }
+
+            // RECENTS_BUTTON_ELEMENT
+            recentsButtonElement.onclick = () => {
+                renderRecents()
+            }
+
+            // CONTACTS_BUTTON_ELEMENT
+            contactsButtonElement.onclick = () => {
+                renderContacts()
+            }
+
+            // KEYPAD_BUTTON_ELEMENT
+            keypadButtonElement.onclick = () => {
+                renderKeypad()
+            }
+
+            // VOICEMAIL_BUTTON_ELEMENT
+            voicemailButtonElement.onclick = () => {
+                renderVoicemail()
             }
 
             DIAL_BUTTONS_ARRAY.forEach((button) => {

@@ -136,7 +136,7 @@ footer {
     cursor: pointer;
 }
 
-#new-contact-element {
+.new-contact {
     font-size: 40px;
     font-weight: bolder;
 }
@@ -167,4 +167,29 @@ footer {
 .details {
     width: 400px;
     font-size: 30px;
+}
+
+#contact-element {
+    font-size: larger;
+    font-weight: bold;
+}
+
+#contacts-header-element {
+    border: 2px solid red;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.contacts-controls {
+    height: 50px;
+    font-size: larger;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#contacts-title {
+    font-size: 40px;
+    font-weight: bold;
 }
