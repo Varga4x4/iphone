@@ -69,31 +69,59 @@ const IN_CALL_BUTTONS_ARRAY = [
 
 const CONTACTS = []
 
-    ; (() => {
-        // ELEMENTS
-        const addNumberElement = document.querySelector("p")
-        const displayElement = document.getElementById("display")
-        const callButtonElement = document.getElementById("call-button")
-        const deleteButtonElement = document.getElementById("delete-button")
-        const dialButtonPadElement = document.getElementById("dial-button-pad")
-        const callDeleteWrapperElement = document.getElementById("call-delete-wrapper")
-        const headerElement = document.querySelector("header")
-        const footerElement = document.querySelector("footer")
-        const appElement = document.getElementById("app")
-        const mainElement = document.querySelector("main")
-        const favouritesButtonElement = document.getElementById("favourites")
-        const recentsButtonElement = document.getElementById("recents")
-        const contactsButtonElement = document.getElementById("contacts")
-        const keypadButtonElement = document.getElementById("keypad")
-        const voicemailButtonElement = document.getElementById("voicemail")
-        const firstNameElement = document.getElementById("first-name")
-        const lastNameElement = document.getElementById("last-name")
-        const phoneNumberElement = document.getElementById("phone-number")
-        const emailElement = document.getElementById("email")
+const CLASS_NAMES = {
+    dialButton: "dial-button",
+    dialValues: "dial-values",
+    modalControls: "modal-controls"
+}
 
+const ELEMENT_IDS = {
+    addDetailsElementWrapper: "add-details-element-wrapper",
+    addPhoto: "add-photo",
+    addPhotoElementWrapper: "add-photo-element-wrapper",
+    callDeleteWrapper: "call-delete-wrapper",
+    endButton: "end-button",
+    endButtonElementWrapper: "end-button-element-wrapper",
+    modal: "modal",
+    modalControlWrapper: "modal-control-wrapper",
+    newContactTitle: "new-contact",
+}
+
+// ELEMENTS
+
+// TODO: update addNumberElement with id
+const addNumberElement = document.querySelector("p")
+const displayElement = document.getElementById("display")
+const callButtonElement = document.getElementById("call-button")
+const deleteButtonElement = document.getElementById("delete-button")
+const dialButtonPadElement = document.getElementById("dial-button-pad")
+const callDeleteWrapperElement = document.getElementById("call-delete-wrapper")
+const headerElement = document.querySelector("header")
+const footerElement = document.querySelector("footer")
+const appElement = document.getElementById("app")
+const mainElement = document.querySelector("main")
+const favouritesButtonElement = document.getElementById("favourites")
+const recentsButtonElement = document.getElementById("recents")
+const contactsButtonElement = document.getElementById("contacts")
+const keypadButtonElement = document.getElementById("keypad")
+const voicemailButtonElement = document.getElementById("voicemail")
+
+const INNER_TEXTS = {
+    addNumberElement: "calling...",
+    addPhotoElement: "Add Photo",
+    cancelButtonElement: "Cancel",
+    displayElement: "",
+    doneButttonElement: "Done",
+    endButtonElement: "End",
+    newContactTitleElement: "New Contact",
+}
+
+
+    ; (() => {
         // HELPERS
         const renderDisplay = (numberToAdd) => {
-            const oldValue = displayElement.innerHTML;
+            const oldValue = displayElement.innerText;
+
             let newValue
             if (numberToAdd) {
                 newValue = oldValue + numberToAdd
@@ -101,18 +129,17 @@ const CONTACTS = []
                 newValue = oldValue.slice(0, oldValue.length - 1)
             }
 
-            displayElement.innerHTML = newValue
-
-            addNumberElement.style.visibility = "visible"
+            displayElement.innerText = newValue
 
             if (newValue.length) {
                 deleteButtonElement.style.visibility = "visible"
-
+                addNumberElement.style.visibility = "visible"
             } else {
                 deleteButtonElement.style.visibility = "hidden"
                 addNumberElement.style.visibility = "hidden"
             }
 
+            // TODO: fix it later
             callButtonElement.onclick = () => {
                 if (newValue.length) {
                     renderDialButtons()
@@ -121,139 +148,170 @@ const CONTACTS = []
         }
 
         const renderDialButtons = () => {
-            addNumberElement.innerText = "calling..."
+            addNumberElement.innerText = INNER_TEXTS.addNumberElement
 
-            document.querySelectorAll('.dial-button').forEach((oldButton) => oldButton.remove())
-            document.querySelectorAll('footer').forEach((oldFooter) => oldFooter.remove())
-            document.querySelectorAll('#call-delete-wrapper').forEach((oldwrapper) => oldwrapper.remove())
+            document.querySelectorAll(`.${CLASS_NAMES.dialButton}, footer, #${ELEMENT_IDS.callDeleteWrapper}`).forEach((oldElement) => oldElement.remove())
 
             IN_CALL_BUTTONS_ARRAY.forEach((button) => {
                 const inCallButtonElement = document.createElement("button")
-                inCallButtonElement.className = "dial-button"
-                inCallButtonElement.innerHTML = button.value
+                inCallButtonElement.className = CLASS_NAMES.dialButton
+                inCallButtonElement.innerText = button.value
 
                 dialButtonPadElement.appendChild(inCallButtonElement)
             })
 
             const endButtonElementWrapper = document.createElement("div")
-            endButtonElementWrapper.id = "end-button-element-wrapper"
-            endButtonElementWrapper.style.border = "2px solid red"
-            endButtonElementWrapper.style.paddingTop = "100px"
-            endButtonElementWrapper.style.paddingBottom = "100px"
-            endButtonElementWrapper.style.display = "flex"
-            endButtonElementWrapper.style.justifyContent = "center"
+            endButtonElementWrapper.id = ELEMENT_IDS.endButtonElementWrapper
 
             const endButtonElement = document.createElement("button")
-            endButtonElement.id = "end-button"
-            endButtonElement.className = "dial-button"
-            endButtonElement.innerHTML = "End"
-            endButtonElement.style.background = "red"
-            endButtonElement.style.color = "white"
-
-            mainElement.appendChild(endButtonElementWrapper)
-            endButtonElementWrapper.appendChild(endButtonElement)
-
-            // END_BUTTON_ELEMENT
+            endButtonElement.id = ELEMENT_IDS.endButton
+            endButtonElement.className = CLASS_NAMES.dialButton
             endButtonElement.onclick = () => {
-                displayElement.innerHTML = ""
+                displayElement.innerText = INNER_TEXTS.displayElement
 
-                document.querySelectorAll(".dial-button").forEach((oldButton) => oldButton.remove())
-                document.querySelectorAll("#end-button-element-wrapper").forEach((oldwrapper) => oldwrapper.remove())
+                document.querySelectorAll(`.${CLASS_NAMES.dialButton}, #${ELEMENT_IDS.endButtonElementWrapper}`).forEach((oldElement) => oldElement.remove())
 
+                callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
                 mainElement.appendChild(callDeleteWrapperElement)
-                callDeleteWrapperElement.appendChild(callButtonElement)
-                callDeleteWrapperElement.appendChild(deleteButtonElement)
                 appElement.appendChild(footerElement)
 
                 renderDisplay()
                 renderApp()
             }
+
+            const endButtonTextElement = document.createElement("p")
+            endButtonTextElement.className = CLASS_NAMES.dialValues
+            endButtonTextElement.innerText = INNER_TEXTS.endButtonElement
+
+            endButtonElement.appendChild(endButtonTextElement)
+            endButtonElementWrapper.appendChild(endButtonElement)
+            mainElement.appendChild(endButtonElementWrapper)
         }
 
         const renderAddNumber = () => {
             const modalElement = document.createElement("div")
-            modalElement.id = "modal"
-            modalElement.style.visibility = "visible"
+            modalElement.id = ELEMENT_IDS.modal
 
             const modalControlWrapperElement = document.createElement("div")
-            modalControlWrapperElement.id = "modal-control-wrapper"
+            modalControlWrapperElement.id = ELEMENT_IDS.modalControlWrapper
 
             const cancelButtonElement = document.createElement("button")
-            cancelButtonElement.innerHTML = "Cancel"
-            cancelButtonElement.className = "modal-controls"
+            cancelButtonElement.innerText = INNER_TEXTS.cancelButtonElement
+            cancelButtonElement.className = CLASS_NAMES.modalControls
             cancelButtonElement.onclick = () => {
                 modalElement.style.visibility = "hidden"
+
+                const lastNameElement = document.getElementById("last-name")
+                const firstNameElement = document.getElementById("first-name")
+                const emailElement = document.getElementById("email")
+
                 firstNameElement.value = ""
                 lastNameElement.value = ""
                 emailElement.value = ""
             }
 
             const newContactTitleElement = document.createElement("p")
-            newContactTitleElement.innerHTML = "New Contact"
-            newContactTitleElement.className = "new-contact"
+            newContactTitleElement.innerText = INNER_TEXTS.newContactTitleElement
+            newContactTitleElement.className = CLASS_NAMES.newContactTitle
 
             const doneButttonElement = document.createElement("button")
-            doneButttonElement.innerHTML = "Done"
-            doneButttonElement.className = "modal-controls"
+            doneButttonElement.innerText = INNER_TEXTS.doneButttonElement
+            doneButttonElement.className = CLASS_NAMES.modalControls
             doneButttonElement.onclick = () => {
                 modalElement.style.visibility = "hidden"
-                const newContact = {}
-                newContact.firstName = firstNameElement.value
-                newContact.lastName = lastNameElement.value
-                newContact.phoneNumber = phoneNumberElement.value
-                newContact.eMail = emailElement.value
 
+                const lastNameElement = document.getElementById("last-name")
+                const firstNameElement = document.getElementById("first-name")
+                const phoneNumberElement = document.getElementById("phone-number")
+                const emailElement = document.getElementById("email")
+
+
+
+                console.log(lastNameElement)
+                const newContact = {
+                    lastName: lastNameElement.value,
+                    phoneNumber: phoneNumberElement.value,
+                    eMail: emailElement.value,
+                    firstName: firstNameElement.value,
+                }
+                console.log(newContact)
                 CONTACTS.push(newContact)
+
+                lastNameElement.value = ""
+                firstNameElement.value = ""
+                phoneNumberElement.value = ""
+                emailElement.value = ""
             }
 
             const addPhotoElementWrapper = document.createElement("div")
-            addPhotoElementWrapper.id = "add-photo-element-wrapper"
+            addPhotoElementWrapper.id = ELEMENT_IDS.addPhotoElementWrapper
 
             const addPhotoElement = document.createElement("p")
-            addPhotoElement.innerHTML = "Add Photo"
-            addPhotoElement.id = "add-photo"
+            addPhotoElement.innerText = INNER_TEXTS.addPhotoElement
+            addPhotoElement.id = ELEMENT_IDS.addPhoto
             addPhotoElement.onclick = () => {
                 console.log("Select photo from Gallery")
             }
 
             const addDetailsElementWrapper = document.createElement("div")
-            addDetailsElementWrapper.id = "add-details-element-wrapper"
+            addDetailsElementWrapper.id = ELEMENT_IDS.addDetailsElementWrapper
 
-            const firstNameElement = document.createElement("input")
-            firstNameElement.id = "first-name"
-            firstNameElement.className = "details"
-            firstNameElement.placeholder = "First name"
-            firstNameElement.setAttribute("type", "text")
+            const inputs = [
+                {
+                    id: "first-name",
+                    className: "details",
+                    placeholder: "First name",
+                    attribute: "text"
+                },
+                {
+                    id: "last-name",
+                    className: "details",
+                    placeholder: "Last name",
+                    attribute: "text"
+                },
+                {
+                    id: "phone-number",
+                    className: "details",
+                    value: displayElement.innerText
+                },
+                {
+                    id: "email",
+                    className: "details",
+                    placeholder: "E-mail",
+                    attribute: "email"
+                },
+            ]
 
-            const lastNameElement = document.createElement("input")
-            lastNameElement.id = "last-name"
-            lastNameElement.className = "details"
-            lastNameElement.placeholder = "Last name"
-            lastNameElement.setAttribute("type", "text")
+            inputs.forEach((input) => {
+                const inputElement = document.createElement("input")
+                inputElement.id = input.id
+                inputElement.className = input.className
 
-            const phoneNumberElement = document.createElement("input")
-            phoneNumberElement.id = "phone-number"
-            phoneNumberElement.className = "details"
-            phoneNumberElement.value = displayElement.innerHTML
+                if (input.placeholder) {
+                    inputElement.placeholder = input.placeholder
+                }
 
-            const emailElement = document.createElement("input")
-            emailElement.id = "email"
-            emailElement.className = "details"
-            emailElement.placeholder = "E-mail"
-            emailElement.setAttribute("type", "email")
+                if (input.value) {
+                    inputElement.value = input.value
+                }
 
-            document.body.insertBefore(modalElement, appElement)
-            modalElement.appendChild(modalControlWrapperElement)
-            modalControlWrapperElement.appendChild(cancelButtonElement)
-            modalControlWrapperElement.appendChild(newContactTitleElement)
-            modalControlWrapperElement.appendChild(doneButttonElement)
-            modalElement.appendChild(addPhotoElementWrapper)
+                inputElement.setAttribute("type", input.attribute)
+
+                addDetailsElementWrapper.appendChild(inputElement)
+            })
+
+            modalControlWrapperElement.append(
+                cancelButtonElement,
+                newContactTitleElement,
+                doneButttonElement
+            )
             addPhotoElementWrapper.appendChild(addPhotoElement)
-            modalElement.appendChild(addDetailsElementWrapper)
-            addDetailsElementWrapper.appendChild(firstNameElement)
-            addDetailsElementWrapper.appendChild(lastNameElement)
-            addDetailsElementWrapper.appendChild(phoneNumberElement)
-            addDetailsElementWrapper.appendChild(emailElement)
+            modalElement.append(
+                modalControlWrapperElement,
+                addPhotoElementWrapper,
+                addDetailsElementWrapper
+            )
+            document.body.insertBefore(modalElement, appElement)
         }
 
         const renderFavourites = () => {
@@ -273,10 +331,10 @@ const CONTACTS = []
             contactsHeaderElement.id = "contacts-header-element"
 
             const backButtonElement = document.createElement("button")
-            backButtonElement.innerHTML = "Back"
+            backButtonElement.innerText = "Back"
             backButtonElement.className = "contacts-controls"
             backButtonElement.onclick = () => {
-                document.querySelectorAll("#contacts-header-element").forEach((oldHeader) => oldHeader.remove())
+                document.querySelectorAll("#contacts-header-element, #contact-element").forEach((oldHeader) => oldHeader.remove())
 
                 appElement.appendChild(headerElement)
                 appElement.appendChild(mainElement)
@@ -288,10 +346,10 @@ const CONTACTS = []
 
             const contactsTitleElement = document.createElement("p")
             contactsTitleElement.id = "contacts-title"
-            contactsTitleElement.innerHTML = "Contacts"
+            contactsTitleElement.innerText = "Contacts"
 
             const plusButtonElement = document.createElement("button")
-            plusButtonElement.innerHTML = "+"
+            plusButtonElement.innerText = "+"
             plusButtonElement.className = "contacts-controls"
             plusButtonElement.onclick = () => {
                 renderAddNumber()
@@ -306,7 +364,7 @@ const CONTACTS = []
                 console.log(person)
                 const contactElement = document.createElement("div")
                 contactElement.id = "contact-element"
-                contactElement.innerHTML = person.firstName + " " + person.lastName
+                contactElement.innerText = person.firstName + " " + person.lastName
 
                 appElement.appendChild(contactElement)
             })
@@ -364,20 +422,28 @@ const CONTACTS = []
                 dialButtonElement.className = "dial-button"
                 dialButtonElement.id = "hal"
 
+                // let pressTimer
+
                 dialButtonElement.onclick = () => {
-                    const numberToAdd = buttonValueElement.innerHTML
+                    // clearTimeout(pressTimer);
+
+                    // pressTimer = window.setTimeout(function () {
+                    //     console.log("hello")
+                    // }, 1000);
+
+                    const numberToAdd = buttonValueElement.innerText
 
                     renderDisplay(numberToAdd)
                 }
 
                 const buttonValueElement = document.createElement('p')
-                buttonValueElement.innerHTML = button.value
+                buttonValueElement.innerText = button.value
                 buttonValueElement.className = "dial-values"
                 dialButtonElement.appendChild(buttonValueElement)
 
                 if (button.characters !== undefined) {
                     const buttonCharactersElement = document.createElement('p')
-                    buttonCharactersElement.innerHTML = button.characters
+                    buttonCharactersElement.innerText = button.characters
                     dialButtonElement.appendChild(buttonCharactersElement)
                 }
 
