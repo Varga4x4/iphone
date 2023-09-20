@@ -4,23 +4,23 @@ const DIAL_BUTTONS_ARRAY = [
     },
     {
         value: 2,
-        characters: "ABC",
+        characters: "ABC"
     },
     {
         value: 3,
-        characters: "DEF",
+        characters: "DEF"
     },
     {
         value: 4,
-        characters: "GHI",
+        characters: "GHI"
     },
     {
         value: 5,
-        characters: "JKL",
+        characters: "JKL"
     },
     {
         value: 6,
-        characters: "MNO",
+        characters: "MNO"
     },
     {
         value: 7,
@@ -35,14 +35,14 @@ const DIAL_BUTTONS_ARRAY = [
         characters: "WXYZ"
     },
     {
-        value: "*",
+        value: "*"
     },
     {
         value: 0,
         characters: "+"
     },
     {
-        value: "#",
+        value: "#"
     }
 ]
 
@@ -70,16 +70,22 @@ const IN_CALL_BUTTONS_ARRAY = [
 const CONTACTS = []
 
 const CLASS_NAMES = {
+    contactsControls: "contacts-controls",
     dialButton: "dial-button",
     dialValues: "dial-values",
-    modalControls: "modal-controls"
+    modalControls: "modal-controls",
 }
 
 const ELEMENT_IDS = {
     addDetailsElementWrapper: "add-details-element-wrapper",
     addPhoto: "add-photo",
     addPhotoElementWrapper: "add-photo-element-wrapper",
+    buttonCharacters: "button-characters",
     callDeleteWrapper: "call-delete-wrapper",
+    contact: "contact-element",
+    contactsHeader: "contacts-header-element",
+    contactsTitle: "contacts-title",
+    dialButton: "dial",
     endButton: "end-button",
     endButtonElementWrapper: "end-button-element-wrapper",
     modal: "modal",
@@ -88,38 +94,41 @@ const ELEMENT_IDS = {
 }
 
 // ELEMENTS
-
-// TODO: update addNumberElement with id
-const addNumberElement = document.querySelector("p")
-const displayElement = document.getElementById("display")
+const addNumberElement = document.getElementById("add-number")
+const appElement = document.getElementById("app")
 const callButtonElement = document.getElementById("call-button")
+const callDeleteWrapperElement = document.getElementById("call-delete-wrapper")
+const contactsButtonElement = document.getElementById("contacts")
 const deleteButtonElement = document.getElementById("delete-button")
 const dialButtonPadElement = document.getElementById("dial-button-pad")
-const callDeleteWrapperElement = document.getElementById("call-delete-wrapper")
-const headerElement = document.querySelector("header")
-const footerElement = document.querySelector("footer")
-const appElement = document.getElementById("app")
-const mainElement = document.querySelector("main")
+const displayElement = document.getElementById("display")
 const favouritesButtonElement = document.getElementById("favourites")
-const recentsButtonElement = document.getElementById("recents")
-const contactsButtonElement = document.getElementById("contacts")
+const footerElement = document.querySelector("footer")
+const headerElement = document.querySelector("header")
 const keypadButtonElement = document.getElementById("keypad")
+const mainElement = document.querySelector("main")
+const recentsButtonElement = document.getElementById("recents")
 const voicemailButtonElement = document.getElementById("voicemail")
 
 const INNER_TEXTS = {
-    addNumberElement: "calling...",
+    addNumberElement: "Add Number",
     addPhotoElement: "Add Photo",
+    backButtonElement: "Back",
     cancelButtonElement: "Cancel",
+    contactsTitleElement: "Contacts",
     displayElement: "",
     doneButttonElement: "Done",
     endButtonElement: "End",
     newContactTitleElement: "New Contact",
+    plusButtonElement: "+",
 }
-
 
     ; (() => {
         // HELPERS
         const renderDisplay = (numberToAdd) => {
+
+            // console.log(displayElement.innerText)
+
             const oldValue = displayElement.innerText;
 
             let newValue
@@ -148,7 +157,7 @@ const INNER_TEXTS = {
         }
 
         const renderDialButtons = () => {
-            addNumberElement.innerText = INNER_TEXTS.addNumberElement
+            addNumberElement.innerText = "Calling..."
 
             document.querySelectorAll(`.${CLASS_NAMES.dialButton}, footer, #${ELEMENT_IDS.callDeleteWrapper}`).forEach((oldElement) => oldElement.remove())
 
@@ -225,22 +234,20 @@ const INNER_TEXTS = {
                 const phoneNumberElement = document.getElementById("phone-number")
                 const emailElement = document.getElementById("email")
 
-
-
-                console.log(lastNameElement)
                 const newContact = {
                     lastName: lastNameElement.value,
                     phoneNumber: phoneNumberElement.value,
                     eMail: emailElement.value,
                     firstName: firstNameElement.value,
                 }
-                console.log(newContact)
                 CONTACTS.push(newContact)
 
                 lastNameElement.value = ""
                 firstNameElement.value = ""
                 phoneNumberElement.value = ""
                 emailElement.value = ""
+
+                renderDisplay()
             }
 
             const addPhotoElementWrapper = document.createElement("div")
@@ -323,48 +330,47 @@ const INNER_TEXTS = {
         }
 
         const renderContacts = () => {
-            document.querySelectorAll('header').forEach((oldHeader) => oldHeader.remove())
-            document.querySelectorAll('main').forEach((oldMain) => oldMain.remove())
-            document.querySelectorAll('footer').forEach((oldFooter) => oldFooter.remove())
+            document.querySelectorAll(`header, main, footer`).forEach((oldElement) => oldElement.remove())
 
             const contactsHeaderElement = document.createElement("div")
-            contactsHeaderElement.id = "contacts-header-element"
+            contactsHeaderElement.id = ELEMENT_IDS.contactsHeader
 
             const backButtonElement = document.createElement("button")
-            backButtonElement.innerText = "Back"
-            backButtonElement.className = "contacts-controls"
+            backButtonElement.innerText = INNER_TEXTS.backButtonElement
+            backButtonElement.className = CLASS_NAMES.contactsControls
             backButtonElement.onclick = () => {
-                document.querySelectorAll("#contacts-header-element, #contact-element").forEach((oldHeader) => oldHeader.remove())
+                document.querySelectorAll("#contacts-header-element, #contact-element").forEach((oldElement) => oldElement.remove())
 
-                appElement.appendChild(headerElement)
-                appElement.appendChild(mainElement)
-                mainElement.appendChild(callDeleteWrapperElement)
                 callDeleteWrapperElement.appendChild(callButtonElement)
                 callDeleteWrapperElement.appendChild(deleteButtonElement)
-                appElement.appendChild(footerElement)
+                mainElement.appendChild(callDeleteWrapperElement)
+                appElement.append(
+                    headerElement,
+                    mainElement,
+                    footerElement
+                )
             }
 
             const contactsTitleElement = document.createElement("p")
-            contactsTitleElement.id = "contacts-title"
-            contactsTitleElement.innerText = "Contacts"
+            contactsTitleElement.id = ELEMENT_IDS.contactsTitle
+            contactsTitleElement.innerText = INNER_TEXTS.contactsTitleElement
 
             const plusButtonElement = document.createElement("button")
-            plusButtonElement.innerText = "+"
-            plusButtonElement.className = "contacts-controls"
+            plusButtonElement.innerText = INNER_TEXTS.plusButtonElement
+            plusButtonElement.className = CLASS_NAMES.contactsControls
             plusButtonElement.onclick = () => {
                 renderAddNumber()
             }
 
-            appElement.appendChild(contactsHeaderElement)
             contactsHeaderElement.appendChild(backButtonElement)
             contactsHeaderElement.appendChild(contactsTitleElement)
             contactsHeaderElement.appendChild(plusButtonElement)
+            appElement.appendChild(contactsHeaderElement)
 
             CONTACTS.forEach((person) => {
-                console.log(person)
                 const contactElement = document.createElement("div")
-                contactElement.id = "contact-element"
-                contactElement.innerText = person.firstName + " " + person.lastName
+                contactElement.id = ELEMENT_IDS.contact
+                contactElement.innerText = `${person.firstName} ${person.lastName}`
 
                 appElement.appendChild(contactElement)
             })
@@ -380,7 +386,7 @@ const INNER_TEXTS = {
 
         const renderApp = () => {
             // ADD_NUMBER_ELEMENT
-            addNumberElement.innerText = "Add Number"
+            addNumberElement.innerText = INNER_TEXTS.addNumberElement
             addNumberElement.style.visibility = "hidden"
             addNumberElement.onclick = () => {
                 renderAddNumber()
@@ -404,6 +410,7 @@ const INNER_TEXTS = {
 
             // CONTACTS_BUTTON_ELEMENT
             contactsButtonElement.onclick = () => {
+                console.log(CONTACTS)
                 renderContacts()
             }
 
@@ -419,30 +426,33 @@ const INNER_TEXTS = {
 
             DIAL_BUTTONS_ARRAY.forEach((button) => {
                 const dialButtonElement = document.createElement("button")
-                dialButtonElement.className = "dial-button"
-                dialButtonElement.id = "hal"
+                dialButtonElement.className = CLASS_NAMES.dialButton
+                dialButtonElement.id = ELEMENT_IDS.dialButton
 
-                // let pressTimer
+                // STILL_TO_FIX
+                let pressTimer
 
                 dialButtonElement.onclick = () => {
-                    // clearTimeout(pressTimer);
+                    clearTimeout(pressTimer);
 
-                    // pressTimer = window.setTimeout(function () {
-                    //     console.log("hello")
-                    // }, 1000);
+                    pressTimer = window.setTimeout(function () {
+                        numberToAdd = button.characters
+                        console.log(button.characters)
+                    }, 1000);
 
-                    const numberToAdd = buttonValueElement.innerText
+                    let numberToAdd = buttonValueElement.innerText
 
                     renderDisplay(numberToAdd)
                 }
 
                 const buttonValueElement = document.createElement('p')
                 buttonValueElement.innerText = button.value
-                buttonValueElement.className = "dial-values"
+                buttonValueElement.className = CLASS_NAMES.dialValues
                 dialButtonElement.appendChild(buttonValueElement)
 
                 if (button.characters !== undefined) {
                     const buttonCharactersElement = document.createElement('p')
+                    buttonCharactersElement.id = ELEMENT_IDS.buttonCharacters
                     buttonCharactersElement.innerText = button.characters
                     dialButtonElement.appendChild(buttonCharactersElement)
                 }
