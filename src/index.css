@@ -207,3 +207,16 @@ footer {
     background: red;
     color: white;
 }
+
+#search-field-wrapper {
+    border: 2px solid red;
+    height: 100px;
+    display: flex;
+}
+
+#search-field {
+    border: 2px solid green;
+    font-size: 30px;
+    height: 40px;
+    width: 200px;
+}

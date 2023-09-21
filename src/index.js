@@ -75,6 +75,7 @@ const CLASS_NAMES = {
     dialButton: "dial-button",
     dialValues: "dial-values",
     modalControls: "modal-controls",
+    newContactTitle: "new-contact",
 }
 
 const ELEMENT_IDS = {
@@ -86,11 +87,13 @@ const ELEMENT_IDS = {
     buttonCharacters: "button-characters",
     callButton: "call-button",
     callDeleteWrapper: "call-delete-wrapper",
+    cancelSearchButton: "cancel-search-button",
     contact: "contact-element",
     contactsButton: "contacts-button",
     contactsHeader: "contacts-header-element",
     contactsTitle: "contacts-title",
     deleteButton: "delete-button",
+    deleteSearchButton: "delete-search-button",
     dialButton: "dial",
     dialButtonPad: "dial-button-pad",
     display: "display",
@@ -106,9 +109,10 @@ const ELEMENT_IDS = {
     main: "main",
     modal: "modal",
     modalControlWrapper: "modal-control-wrapper",
-    newContactTitle: "new-contact",
     phoneNumber: "phone-number",
     recentsButton: "recents-button",
+    searchField: "search-field",
+    searchFieldWrapper: "search-field-wrapper",
     voicemailButton: "voicemail-button",
 }
 
@@ -144,6 +148,7 @@ const INNER_TEXTS = {
     addPhotoElement: "Add Photo",
     backButtonElement: "Back",
     cancelButtonElement: "Cancel",
+    deleteSearchButton: "x",
     contactsTitleElement: "Contacts",
     displayElement: "",
     doneButttonElement: "Done",
@@ -260,7 +265,7 @@ const renderAddNumberModal = () => {
 //
 
 const renderContacts = () => {
-    document.querySelectorAll(`header, main, footer`).forEach((oldElement) => oldElement.remove())
+    document.querySelectorAll(`header, main`).forEach((oldElement) => oldElement.remove())
 
     const contactsHeaderElement = document.createElement("div")
     contactsHeaderElement.id = ELEMENT_IDS.contactsHeader
@@ -269,16 +274,17 @@ const renderContacts = () => {
     backButtonElement.innerText = INNER_TEXTS.backButtonElement
     backButtonElement.className = CLASS_NAMES.contactsControls
     backButtonElement.onclick = () => {
-        document.querySelectorAll("#contacts-header-element, #contact-element").forEach((oldElement) => oldElement.remove())
+        document.querySelectorAll("#contacts-header-element, #contact-element, #search-field-wrapper").forEach((oldElement) => oldElement.remove())
+
+        document.getElementById(ELEMENT_IDS.contactsButton).disabled = false
 
         callDeleteWrapperElement.appendChild(callButtonElement)
         callDeleteWrapperElement.appendChild(deleteButtonElement)
         mainElement.appendChild(callDeleteWrapperElement)
-        appElement.append(
-            headerElement,
-            mainElement,
-            footerElement
-        )
+
+        appElement.appendChild(headerElement)
+        appElement.appendChild(mainElement)
+        appElement.appendChild(footerElement)
     }
 
     const contactsTitleElement = document.createElement("p")
@@ -295,18 +301,40 @@ const renderContacts = () => {
     contactsHeaderElement.appendChild(backButtonElement)
     contactsHeaderElement.appendChild(contactsTitleElement)
     contactsHeaderElement.appendChild(plusButtonElement)
-    appElement.appendChild(contactsHeaderElement)
+    appElement.insertBefore(contactsHeaderElement, footerElement)
+
+    const searchFieldWrapperElement = document.createElement("div")
+    searchFieldWrapperElement.id = ELEMENT_IDS.searchFieldWrapper
+
+    const searchFieldElement = document.createElement("insert")
+    searchFieldElement.id = ELEMENT_IDS.searchField
+    searchFieldElement.placeholder = "Search"
+    searchFieldElement.setAttribute("type", "text")
+
+    const deleteSearchButtonElement = document.createElement("button")
+    deleteSearchButtonElement.id = ELEMENT_IDS.delteSearchButton
+    deleteSearchButtonElement.innerText = INNER_TEXTS.deleteSearchButton
+
+    const cancelSearchButtonElement = document.createElement("button")
+    cancelSearchButtonElement.id = ELEMENT_IDS.cancelSearchButton
+    cancelSearchButtonElement.innerText = INNER_TEXTS.cancelButtonElement
+
+    searchFieldElement.appendChild(deleteSearchButtonElement)
+    searchFieldWrapperElement.appendChild(searchFieldElement)
+    searchFieldWrapperElement.appendChild(cancelSearchButtonElement)
+    appElement.insertBefore(searchFieldWrapperElement, footerElement)
 
     CONTACTS.forEach((person) => {
         const contactElement = document.createElement("div")
         contactElement.id = ELEMENT_IDS.contact
         contactElement.innerText = `${person.firstName} ${person.lastName}`
 
-        appElement.appendChild(contactElement)
+        appElement.insertBefore(contactElement, footerElement)
+
     })
 }
 
-const renderApp = () => {
+const renderDialButtons = () => {
     // ADD_NUMBER_ELEMENT
     addNumberElement.innerText = INNER_TEXTS.addNumberElement
     addNumberElement.style.visibility = "hidden"
@@ -318,32 +346,6 @@ const renderApp = () => {
     deleteButtonElement.style.visibility = "hidden"
     deleteButtonElement.onclick = () => {
         renderDisplay()
-    }
-
-    // FAVOURITES_BUTTON_ELEMENT
-    favouritesButtonElement.onclick = () => {
-        renderFavourites()
-    }
-
-    // RECENTS_BUTTON_ELEMENT
-    recentsButtonElement.onclick = () => {
-        renderRecents()
-    }
-
-    // CONTACTS_BUTTON_ELEMENT
-    contactsButtonElement.onclick = () => {
-        console.log(CONTACTS)
-        renderContacts()
-    }
-
-    // KEYPAD_BUTTON_ELEMENT
-    keypadButtonElement.onclick = () => {
-        renderKeypad()
-    }
-
-    // VOICEMAIL_BUTTON_ELEMENT
-    voicemailButtonElement.onclick = () => {
-        renderVoicemail()
     }
 
     DIAL_BUTTONS_ARRAY.forEach((button) => {
@@ -383,7 +385,37 @@ const renderApp = () => {
     })
 }
 
-const renderDialButtons = () => {
+
+const renderFooter = () => {
+    // FAVOURITES_BUTTON_ELEMENT
+    favouritesButtonElement.onclick = () => {
+        renderFavourites()
+    }
+
+    // RECENTS_BUTTON_ELEMENT
+    recentsButtonElement.onclick = () => {
+        renderRecents()
+    }
+
+    // CONTACTS_BUTTON_ELEMENT
+    contactsButtonElement.onclick = () => {
+        document.getElementById(ELEMENT_IDS.contactsButton).disabled = true
+
+        renderContacts()
+    }
+
+    // KEYPAD_BUTTON_ELEMENT
+    keypadButtonElement.onclick = () => {
+        renderKeypad()
+    }
+
+    // VOICEMAIL_BUTTON_ELEMENT
+    voicemailButtonElement.onclick = () => {
+        renderVoicemail()
+    }
+}
+
+const renderInCallButtons = () => {
     addNumberElement.innerText = INNER_TEXTS.addNumberElementInCall
 
     document.querySelectorAll(`.${CLASS_NAMES.dialButton}, footer, #${ELEMENT_IDS.callDeleteWrapper}`).forEach((oldElement) => oldElement.remove())
@@ -412,7 +444,7 @@ const renderDialButtons = () => {
         appElement.appendChild(footerElement)
 
         renderDisplay()
-        renderApp()
+        renderDialButtons()
     }
 
     const endButtonTextElement = document.createElement("p")
@@ -447,7 +479,7 @@ const renderDisplay = (numberToAdd) => {
     // TODO: fix it later
     callButtonElement.onclick = () => {
         if (newValue.length) {
-            renderDialButtons()
+            renderInCallButtons()
         }
     }
 }
@@ -470,4 +502,5 @@ const renderVoicemail = () => {
 //
 
 // START_APP
-renderApp()
+renderDialButtons()
+renderFooter()
