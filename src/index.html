@@ -10,12 +10,20 @@
 
 <body>
     <div id="app">
-        <header>
+        <header> // Needs to be created in JS in renderKeypad, but inside div with ID=keyPad
             <div id="display"></div>
             <p id="add-number"></p>
         </header>
 
         <main>
+            <div id="contacts"></div>
+            <div id="favourites"></div>
+            <div id="contacts"></div>
+            <div id="contacts"></div>
+            <div id="contacts"></div>
+        </main>
+
+        <main> // Needs to be created in JS in renderKeypad, but inside div with ID=keyPad
             <div id="dial-button-pad"></div>
 
             <div id="call-delete-wrapper">
@@ -30,11 +38,11 @@
         </main>
 
         <footer>
-            <button class="footer-button" id="favourites-button">Favourites</button>
-            <button class="footer-button" id="recents-button">Recents</button>
-            <button class="footer-button" id="contacts-button">Contacts</button>
-            <button class="footer-button" id="keypad-button">Keypad</button>
-            <button class="footer-button" id="voicemail-button">Voicemail</button>
+            <button class="footer-button" id="favourites-button" onclick="renderFavourites()">Favourites</button>
+            <button class="footer-button" id="recents-button" onclick="renderRecents()">Recents</button>
+            <button class="footer-button" id="contacts-button" onclick="renderContacts()">Contacts</button>
+            <button class="footer-button" id="keypad-button" onclick="renderKeypad()">Keypad</button>
+            <button class="footer-button" id="voicemail-button" onclick="renderVoicemail()">Voicemail</button>
         </footer>
     </div>
 
