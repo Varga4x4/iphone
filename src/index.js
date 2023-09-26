@@ -177,34 +177,25 @@ const voicemailButtonElement = document.getElementById(ELEMENT_IDS.voicemailButt
 //
 
 // HELPERS
-const renderFooter = () => {
-    // FAVOURITES_BUTTON_ELEMENT
-    favouritesButtonElement.onclick = () => {
-        renderFavourites()
+const handleFooterElementOnClick = (tabName) => {
+    const allTabIds = [
+        ELEMENT_IDS.contactsButton,
+        ELEMENT_IDS.favouritesButton,
+        ELEMENT_IDS.recentsButton,
+        ELEMENT_IDS.keypadButton,
+        ELEMENT_IDS.voicemailButton
+    ]
+
+    const alfa = ELEMENT_IDS[`${tabName}Button`]
+
+    const isTabNameCorrect = alfa !== undefined
+    if (!isTabNameCorrect) {
+        throw new Error("Error1")
     }
 
-    // RECENTS_BUTTON_ELEMENT
-    recentsButtonElement.onclick = () => {
-        renderRecents()
-    }
-
-    // CONTACTS_BUTTON_ELEMENT
-    contactsButtonElement.onclick = () => {
-        document.getElementById(ELEMENT_IDS.contactsButton).disabled = true
-        document.getElementById(ELEMENT_IDS.keypadButton).disabled = false
-
-        renderContacts()
-    }
-
-    // KEYPAD_BUTTON_ELEMENT
-    keypadButtonElement.onclick = () => {
-        renderKeypad()
-    }
-
-    // VOICEMAIL_BUTTON_ELEMENT
-    voicemailButtonElement.onclick = () => {
-        renderVoicemail()
-    }
+    allTabIds.forEach((tabId) => {
+        document.getElementById(tabId).disabled = tabId === alfa
+    })
 }
 
 const renderInCallButtons = () => {
@@ -366,6 +357,10 @@ const renderAddNumberModal = () => {
 
 // VIEWS
 const renderContacts = () => {
+    handleFooterElementOnClick("contacts")
+
+    // REMOVE everything from divs having tabNames
+
     document.querySelectorAll(`header, main`).forEach((oldElement) => oldElement.remove())
 
     const contactsHeaderElement = document.createElement("div")
@@ -379,13 +374,13 @@ const renderContacts = () => {
 
         document.getElementById(ELEMENT_IDS.contactsButton).disabled = false
 
-        callDeleteWrapperElement.appendChild(callButtonElement)
-        callDeleteWrapperElement.appendChild(deleteButtonElement)
+        callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
+        // callDeleteWrapperElement.appendChild(deleteButtonElement)
         mainElement.appendChild(callDeleteWrapperElement)
 
-        appElement.appendChild(headerElement)
-        appElement.appendChild(mainElement)
-        appElement.appendChild(footerElement)
+        appElement.append(headerElement, mainElement, footerElement)
+        // appElement.appendChild(mainElement)
+        // appElement.appendChild(footerElement)
     }
 
     const contactsTitleElement = document.createElement("p")
@@ -395,9 +390,7 @@ const renderContacts = () => {
     const plusButtonElement = document.createElement("button")
     plusButtonElement.innerText = INNER_TEXTS.plusButtonElement
     plusButtonElement.className = CLASS_NAMES.contactsControls
-    plusButtonElement.onclick = () => {
-        renderAddNumberModal()
-    }
+    plusButtonElement.onclick = renderAddNumberModal
 
     contactsHeaderElement.appendChild(backButtonElement)
     contactsHeaderElement.appendChild(contactsTitleElement)
@@ -413,7 +406,7 @@ const renderContacts = () => {
     searchFieldElement.setAttribute("type", "text")
 
     const deleteSearchButtonElement = document.createElement("button")
-    deleteSearchButtonElement.id = ELEMENT_IDS.delteSearchButton
+    deleteSearchButtonElement.id = ELEMENT_IDS.deleteSearchButton
     deleteSearchButtonElement.innerText = INNER_TEXTS.deleteSearchButton
 
     const cancelSearchButtonElement = document.createElement("button")
@@ -435,29 +428,20 @@ const renderContacts = () => {
 }
 
 const renderFavourites = () => {
-
+    handleFooterElementOnClick("favourites")
 }
 
 const renderRecents = () => {
-
+    handleFooterElementOnClick("recents")
 }
 
 const renderKeypad = () => {
-    document.getElementById(ELEMENT_IDS.keypadButton).disabled = false
+    handleFooterElementOnClick("keypad")
 
-    renderApp()
-}
+    // CREATE a separate helper function which similiar to above one which will remove everything from divs with IDs having tabName
 
-const renderVoicemail = () => {
-
-}
-//
-//
-
-// APP
-const renderApp = () => {
-
-    document.getElementById(ELEMENT_IDS.keypadButton).disabled = true
+    // RENDER_HEADER
+    //RENDER_MAIN
 
     // ADD_NUMBER_ELEMENT
     addNumberElement.innerText = INNER_TEXTS.addNumberElement
@@ -506,8 +490,19 @@ const renderApp = () => {
         }
 
         dialButtonPadElement.appendChild(dialButtonElement)
-        renderFooter()
     })
+}
+
+const renderVoicemail = () => {
+    handleFooterElementOnClick("voicemail")
+}
+//
+//
+
+// APP
+const renderApp = () => {
+
+    renderKeypad()
 }
 //
 
