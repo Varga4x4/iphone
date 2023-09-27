@@ -104,6 +104,7 @@ const ELEMENT_IDS = {
     firstName: "first-name",
     footer: "footer",
     header: "header",
+    keypad: "keypad",
     keypadButton: "keypad-button",
     lastName: "last-name",
     main: "main",
@@ -149,6 +150,8 @@ const INNER_TEXTS = {
     backButtonElement: "Back",
     cancelButtonElement: "Cancel",
     deleteSearchButton: "x",
+    dialValuesCall: "Call",
+    dialValuesDelete: "X",
     contactsTitleElement: "Contacts",
     displayElement: "",
     doneButttonElement: "Done",
@@ -196,75 +199,6 @@ const handleFooterElementOnClick = (tabName) => {
     allTabIds.forEach((tabId) => {
         document.getElementById(tabId).disabled = tabId === alfa
     })
-}
-
-const renderInCallButtons = () => {
-    addNumberElement.innerText = INNER_TEXTS.addNumberElementInCall
-
-    document.querySelectorAll(`.${CLASS_NAMES.dialButton}, footer, #${ELEMENT_IDS.callDeleteWrapper}`).forEach((oldElement) => oldElement.remove())
-
-    IN_CALL_BUTTONS_ARRAY.forEach((button) => {
-        const inCallButtonElement = document.createElement("button")
-        inCallButtonElement.className = CLASS_NAMES.dialButton
-        inCallButtonElement.innerText = button.value
-
-        dialButtonPadElement.appendChild(inCallButtonElement)
-    })
-
-    const endButtonElementWrapper = document.createElement("div")
-    endButtonElementWrapper.id = ELEMENT_IDS.endButtonElementWrapper
-
-    const endButtonElement = document.createElement("button")
-    endButtonElement.id = ELEMENT_IDS.endButton
-    endButtonElement.className = CLASS_NAMES.dialButton
-    endButtonElement.onclick = () => {
-        displayElement.innerText = INNER_TEXTS.displayElement
-
-        document.querySelectorAll(`.${CLASS_NAMES.dialButton}, #${ELEMENT_IDS.endButtonElementWrapper}`).forEach((oldElement) => oldElement.remove())
-
-        callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
-        mainElement.appendChild(callDeleteWrapperElement)
-        appElement.appendChild(footerElement)
-
-        renderDisplay()
-        renderApp()
-    }
-
-    const endButtonTextElement = document.createElement("p")
-    endButtonTextElement.className = CLASS_NAMES.dialValues
-    endButtonTextElement.innerText = INNER_TEXTS.endButtonElement
-
-    endButtonElement.appendChild(endButtonTextElement)
-    endButtonElementWrapper.appendChild(endButtonElement)
-    mainElement.appendChild(endButtonElementWrapper)
-}
-
-const renderDisplay = (numberToAdd) => {
-    const oldValue = displayElement.innerText;
-
-    let newValue
-    if (numberToAdd) {
-        newValue = oldValue + numberToAdd
-    } else {
-        newValue = oldValue.slice(0, oldValue.length - 1)
-    }
-
-    displayElement.innerText = newValue
-
-    if (newValue.length) {
-        deleteButtonElement.style.visibility = "visible"
-        addNumberElement.style.visibility = "visible"
-    } else {
-        deleteButtonElement.style.visibility = "hidden"
-        addNumberElement.style.visibility = "hidden"
-    }
-
-    // TODO: fix it later
-    callButtonElement.onclick = () => {
-        if (newValue.length) {
-            renderInCallButtons()
-        }
-    }
 }
 //
 
@@ -375,12 +309,9 @@ const renderContacts = () => {
         document.getElementById(ELEMENT_IDS.contactsButton).disabled = false
 
         callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
-        // callDeleteWrapperElement.appendChild(deleteButtonElement)
         mainElement.appendChild(callDeleteWrapperElement)
 
         appElement.append(headerElement, mainElement, footerElement)
-        // appElement.appendChild(mainElement)
-        // appElement.appendChild(footerElement)
     }
 
     const contactsTitleElement = document.createElement("p")
@@ -440,57 +371,164 @@ const renderKeypad = () => {
 
     // CREATE a separate helper function which similiar to above one which will remove everything from divs with IDs having tabName
 
-    // RENDER_HEADER
-    //RENDER_MAIN
+    const renderHeader = () => {
+        const headerElement = document.createElement("header")
+        headerElement.id = ELEMENT_IDS.keypad
 
-    // ADD_NUMBER_ELEMENT
-    addNumberElement.innerText = INNER_TEXTS.addNumberElement
-    addNumberElement.style.visibility = "hidden"
-    addNumberElement.onclick = () => {
-        renderAddNumberModal()
+        const displayElement = document.createElement("div")
+        displayElement.id = ELEMENT_IDS.display
+        displayElement.innerText = INNER_TEXTS.displayElement
+
+        const addNumberElement = document.createElement("p")
+        addNumberElement.id = ELEMENT_IDS.addNumber
+        addNumberElement.innerText = INNER_TEXTS.addNumberElement
+        addNumberElement.style.visibility = "hidden"
+        addNumberElement.onclick = renderAddNumberModal
+
+        headerElement.append(displayElement, addNumberElement)
+        appElement.insertBefore(headerElement, footerElement)
     }
+    renderHeader()
 
-    // DELETE_BUTTON_ELEMENT
-    deleteButtonElement.style.visibility = "hidden"
-    deleteButtonElement.onclick = () => {
-        renderDisplay()
-    }
+    const renderInCallButtons = () => {
+        addNumberElement.innerText = INNER_TEXTS.addNumberElementInCall
 
-    DIAL_BUTTONS_ARRAY.forEach((button) => {
-        const dialButtonElement = document.createElement("button")
-        dialButtonElement.className = CLASS_NAMES.dialButton
-        dialButtonElement.id = ELEMENT_IDS.dialButton
+        document.querySelectorAll(`.${CLASS_NAMES.dialButton}, footer, #${ELEMENT_IDS.callDeleteWrapper}`).forEach((oldElement) => oldElement.remove())
 
-        // STILL_TO_FIX
-        // let pressTimer
+        IN_CALL_BUTTONS_ARRAY.forEach((button) => {
+            const inCallButtonElement = document.createElement("button")
+            inCallButtonElement.className = CLASS_NAMES.dialButton
+            inCallButtonElement.innerText = button.value
 
-        dialButtonElement.onclick = () => {
-            // clearTimeout(pressTimer);
+            dialButtonPadElement.appendChild(inCallButtonElement)
+        })
 
-            const numberToAdd = buttonValueElement.innerText
+        const endButtonElementWrapper = document.createElement("div")
+        endButtonElementWrapper.id = ELEMENT_IDS.endButtonElementWrapper
 
-            // pressTimer = window.setTimeout(function () {
-            //     numberToAdd = button.characters
-            //     console.log(numberToAdd)
-            // }, 1000);
+        const endButtonElement = document.createElement("button")
+        endButtonElement.id = ELEMENT_IDS.endButton
+        endButtonElement.className = CLASS_NAMES.dialButton
+        endButtonElement.onclick = () => {
+            displayElement.innerText = INNER_TEXTS.displayElement
 
-            renderDisplay(numberToAdd)
+            document.querySelectorAll(`.${CLASS_NAMES.dialButton}, #${ELEMENT_IDS.endButtonElementWrapper}`).forEach((oldElement) => oldElement.remove())
+
+            callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
+            mainElement.appendChild(callDeleteWrapperElement)
+            appElement.appendChild(footerElement)
+
+            renderDisplay()
+            renderApp()
         }
 
-        const buttonValueElement = document.createElement('p')
-        buttonValueElement.innerText = button.value
-        buttonValueElement.className = CLASS_NAMES.dialValues
-        dialButtonElement.appendChild(buttonValueElement)
+        const endButtonTextElement = document.createElement("p")
+        endButtonTextElement.className = CLASS_NAMES.dialValues
+        endButtonTextElement.innerText = INNER_TEXTS.endButtonElement
 
-        if (button.characters !== undefined) {
-            const buttonCharactersElement = document.createElement('p')
-            buttonCharactersElement.id = ELEMENT_IDS.buttonCharacters
-            buttonCharactersElement.innerText = button.characters
-            dialButtonElement.appendChild(buttonCharactersElement)
+        endButtonElement.appendChild(endButtonTextElement)
+        endButtonElementWrapper.appendChild(endButtonElement)
+        mainElement.appendChild(endButtonElementWrapper)
+    }
+
+    const renderDisplay = (numberToAdd) => {
+        const oldValue = displayElement.innerText
+
+        let newValue
+        if (numberToAdd) {
+            newValue = oldValue + numberToAdd
+        } else {
+            newValue = oldValue.slice(0, oldValue.length - 1)
         }
 
-        dialButtonPadElement.appendChild(dialButtonElement)
-    })
+        displayElement.innerText = newValue
+
+        if (newValue.length) {
+            deleteButtonElement.style.visibility = "visible"
+            addNumberElement.style.visibility = "visible"
+        } else {
+            deleteButtonElement.style.visibility = "hidden"
+            addNumberElement.style.visibility = "hidden"
+        }
+
+        callButtonElement.onclick = () => {
+            if (newValue.length) {
+                renderInCallButtons()
+            }
+        }
+    }
+
+    const renderMain = () => {
+        const mainElement = document.createElement("main")
+        mainElement.id = ELEMENT_IDS.keypad
+
+        const dialButtonPadElement = document.createElement("div")
+        dialButtonPadElement.id = ELEMENT_IDS.dialButtonPad
+
+        const callDeleteWrapperElement = document.createElement("div")
+        callDeleteWrapperElement.id = ELEMENT_IDS.callDeleteWrapper
+
+        const callButtonElement = document.createElement("button")
+        callButtonElement.id = ELEMENT_IDS.callButton
+        callButtonElement.className = CLASS_NAMES.dialButton
+
+        const dialValuesCallElement = document.createElement("p")
+        dialValuesCallElement.className = CLASS_NAMES.dialValues
+        dialValuesCallElement.innerText = INNER_TEXTS.dialValuesCall
+
+        const deleteButtonElement = document.createElement("button")
+        deleteButtonElement.id = ELEMENT_IDS.deleteButton
+        deleteButtonElement.className = CLASS_NAMES.dialButton
+        deleteButtonElement.style.visibility = "hidden"
+        deleteButtonElement.onclick = renderDisplay
+
+        const dialValuesDeleteElement = document.createElement("p")
+        dialValuesDeleteElement.className = CLASS_NAMES.dialValues
+        dialValuesDeleteElement.innerText = INNER_TEXTS.dialValuesDelete
+
+        callButtonElement.appendChild(dialValuesCallElement)
+        deleteButtonElement.appendChild(dialValuesDeleteElement)
+        callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
+        mainElement.append(dialButtonPadElement, callDeleteWrapperElement)
+        appElement.insertBefore(mainElement, footerElement)
+
+        DIAL_BUTTONS_ARRAY.forEach((button) => {
+            const dialButtonElement = document.createElement("button")
+            dialButtonElement.className = CLASS_NAMES.dialButton
+            dialButtonElement.id = ELEMENT_IDS.dialButton
+
+            // STILL_TO_FIX
+            // let pressTimer
+
+            dialButtonElement.onclick = () => {
+                // clearTimeout(pressTimer);
+
+                const numberToAdd = buttonValueElement.innerText
+
+                // pressTimer = window.setTimeout(function () {
+                //     numberToAdd = button.characters
+                //     console.log(numberToAdd)
+                // }, 1000);
+
+                renderDisplay(numberToAdd)
+            }
+
+            const buttonValueElement = document.createElement('p')
+            buttonValueElement.innerText = button.value
+            buttonValueElement.className = CLASS_NAMES.dialValues
+            dialButtonElement.appendChild(buttonValueElement)
+
+            if (button.characters !== undefined) {
+                const buttonCharactersElement = document.createElement('p')
+                buttonCharactersElement.id = ELEMENT_IDS.buttonCharacters
+                buttonCharactersElement.innerText = button.characters
+                dialButtonElement.appendChild(buttonCharactersElement)
+            }
+
+            dialButtonPadElement.appendChild(dialButtonElement)
+        })
+    }
+    renderMain()
 }
 
 const renderVoicemail = () => {
