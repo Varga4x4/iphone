@@ -41,7 +41,7 @@ header {
     cursor: pointer;
 }
 
-main {
+.main {
     border: 2px solid blue;
     display: flex;
     flex-direction: column;
