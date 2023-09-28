@@ -74,6 +74,7 @@ const CLASS_NAMES = {
     contactsControls: "contacts-controls",
     dialButton: "dial-button",
     dialValues: "dial-values",
+    main: "main",
     modalControls: "modal-controls",
     newContactTitle: "new-contact",
 }
@@ -89,6 +90,7 @@ const ELEMENT_IDS = {
     callDeleteWrapper: "call-delete-wrapper",
     cancelSearchButton: "cancel-search-button",
     contact: "contact-element",
+    contacts: "contacts",
     contactsButton: "contacts-button",
     contactsHeader: "contacts-header-element",
     contactsTitle: "contacts-title",
@@ -100,6 +102,7 @@ const ELEMENT_IDS = {
     email: "email",
     endButton: "end-button",
     endButtonElementWrapper: "end-button-element-wrapper",
+    favourites: "favourites",
     favouritesButton: "favourites-button",
     firstName: "first-name",
     footer: "footer",
@@ -111,9 +114,11 @@ const ELEMENT_IDS = {
     modal: "modal",
     modalControlWrapper: "modal-control-wrapper",
     phoneNumber: "phone-number",
+    recents: "recents",
     recentsButton: "recents-button",
     searchField: "search-field",
     searchFieldWrapper: "search-field-wrapper",
+    voicemail: "voicemail",
     voicemailButton: "voicemail-button",
 }
 
@@ -166,6 +171,7 @@ const addNumberElement = document.getElementById(ELEMENT_IDS.addNumber)
 const appElement = document.getElementById(ELEMENT_IDS.app)
 const callButtonElement = document.getElementById(ELEMENT_IDS.callButton)
 const callDeleteWrapperElement = document.getElementById(ELEMENT_IDS.callDeleteWrapper)
+const contactsElement = document.getElementById(ELEMENT_IDS.contacts)
 const contactsButtonElement = document.getElementById(ELEMENT_IDS.contactsButton)
 const deleteButtonElement = document.getElementById(ELEMENT_IDS.deleteButton)
 const dialButtonPadElement = document.getElementById(ELEMENT_IDS.dialButtonPad)
@@ -173,6 +179,7 @@ const displayElement = document.getElementById(ELEMENT_IDS.display)
 const favouritesButtonElement = document.getElementById(ELEMENT_IDS.favouritesButton)
 const footerElement = document.querySelector(ELEMENT_IDS.footer)
 const headerElement = document.querySelector(ELEMENT_IDS.header)
+const keypadElement = document.getElementById(ELEMENT_IDS.keypad)
 const keypadButtonElement = document.getElementById(ELEMENT_IDS.keypadButton)
 const mainElement = document.querySelector(ELEMENT_IDS.main)
 const recentsButtonElement = document.getElementById(ELEMENT_IDS.recentsButton)
@@ -199,6 +206,21 @@ const handleFooterElementOnClick = (tabName) => {
     allTabIds.forEach((tabId) => {
         document.getElementById(tabId).disabled = tabId === alfa
     })
+}
+
+const removeElementsOnTabChange = (tabName) => {
+    const allTabIds = [
+        ELEMENT_IDS.contacts,
+        ELEMENT_IDS.favourites,
+        ELEMENT_IDS.recents,
+        ELEMENT_IDS.keypad,
+        ELEMENT_IDS.voicemail
+    ]
+
+    const beta = allTabIds.filter((tabId) => tabId !== tabName)
+
+    console.log(beta)
+
 }
 //
 
@@ -292,10 +314,11 @@ const renderAddNumberModal = () => {
 // VIEWS
 const renderContacts = () => {
     handleFooterElementOnClick("contacts")
+    removeElementsOnTabChange("contacts")
 
     // REMOVE everything from divs having tabNames
 
-    document.querySelectorAll(`header, main`).forEach((oldElement) => oldElement.remove())
+    // document.querySelectorAll(`#header, #main`).forEach((oldElement) => oldElement.remove())
 
     const contactsHeaderElement = document.createElement("div")
     contactsHeaderElement.id = ELEMENT_IDS.contactsHeader
@@ -311,7 +334,7 @@ const renderContacts = () => {
         callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
         mainElement.appendChild(callDeleteWrapperElement)
 
-        appElement.append(headerElement, mainElement, footerElement)
+        contactsElement.append(headerElement, mainElement, footerElement)
     }
 
     const contactsTitleElement = document.createElement("p")
@@ -326,7 +349,7 @@ const renderContacts = () => {
     contactsHeaderElement.appendChild(backButtonElement)
     contactsHeaderElement.appendChild(contactsTitleElement)
     contactsHeaderElement.appendChild(plusButtonElement)
-    appElement.insertBefore(contactsHeaderElement, footerElement)
+    contactsElement.appendChild(contactsHeaderElement)
 
     const searchFieldWrapperElement = document.createElement("div")
     searchFieldWrapperElement.id = ELEMENT_IDS.searchFieldWrapper
@@ -348,6 +371,7 @@ const renderContacts = () => {
     searchFieldWrapperElement.appendChild(searchFieldElement)
     searchFieldWrapperElement.appendChild(cancelSearchButtonElement)
     appElement.insertBefore(searchFieldWrapperElement, footerElement)
+    contactsElement.appendChild(searchFieldWrapperElement)
 
     CONTACTS.forEach((person) => {
         const contactElement = document.createElement("div")
@@ -360,6 +384,7 @@ const renderContacts = () => {
 
 const renderFavourites = () => {
     handleFooterElementOnClick("favourites")
+    removeElementsOnTabChange("favourites")
 }
 
 const renderRecents = () => {
@@ -373,7 +398,7 @@ const renderKeypad = () => {
 
     const renderHeader = () => {
         const headerElement = document.createElement("header")
-        headerElement.id = ELEMENT_IDS.keypad
+        headerElement.id = ELEMENT_IDS.header
 
         const displayElement = document.createElement("div")
         displayElement.id = ELEMENT_IDS.display
@@ -386,7 +411,7 @@ const renderKeypad = () => {
         addNumberElement.onclick = renderAddNumberModal
 
         headerElement.append(displayElement, addNumberElement)
-        appElement.insertBefore(headerElement, footerElement)
+        keypadElement.appendChild(headerElement)
     }
     renderHeader()
 
@@ -460,7 +485,8 @@ const renderKeypad = () => {
 
     const renderMain = () => {
         const mainElement = document.createElement("main")
-        mainElement.id = ELEMENT_IDS.keypad
+        mainElement.id = ELEMENT_IDS.main
+        mainElement.className = CLASS_NAMES.main
 
         const dialButtonPadElement = document.createElement("div")
         dialButtonPadElement.id = ELEMENT_IDS.dialButtonPad
@@ -490,7 +516,7 @@ const renderKeypad = () => {
         deleteButtonElement.appendChild(dialValuesDeleteElement)
         callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
         mainElement.append(dialButtonPadElement, callDeleteWrapperElement)
-        appElement.insertBefore(mainElement, footerElement)
+        keypadElement.appendChild(mainElement)
 
         DIAL_BUTTONS_ARRAY.forEach((button) => {
             const dialButtonElement = document.createElement("button")
