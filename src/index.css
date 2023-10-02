@@ -221,3 +221,31 @@ footer {
     height: 40px;
     width: 200px;
 }
+
+#contacts-tab {
+    flex-direction: column;
+}
+
+
+#voicemail-button,
+#recents-button,
+#favourites-button {
+    background-color: red;
+}
+
+
+
+/* NEW */
+#call-tab {
+    border: 2px solid gold;
+    flex-direction: column;
+}
+
+#call-tab>main {
+    border: 2px solid blue;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+    gap: 10px;
+}
