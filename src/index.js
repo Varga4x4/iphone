@@ -75,57 +75,74 @@ const CLASS_NAMES = {
     details: "details",
     dialButton: "dial-button",
     dialValues: "dial-values",
+    displayText: "display-text",
     main: "main",
     modalControls: "modal-controls",
     newContactTitle: "new-contact",
 }
 
 const ELEMENT_IDS = {
-    // Make sections like that
-    // CONTACTS TABS
-    // RECENTS TAB
-
+    // CONTACTS_TAB
     addDetailsElementWrapper: "add-details-element-wrapper",
-    addNumber: "add-number",
     addPhoto: "add-photo",
     addPhotoElementWrapper: "add-photo-element-wrapper",
-    app: "app",
-    buttonCharacters: "button-characters",
-    callTab: 'call-tab',
-    callButton: "call-button",
-    callDeleteWrapper: "call-delete-wrapper",
     cancelSearchButton: "cancel-search-button",
     contact: "contact-element",
     contactsTab: "contacts-tab",
     contactsTabButton: "contacts-button",
     contactsHeader: "contacts-header-element",
     contactsTitle: "contacts-title",
+    email: "email",
+    firstName: "first-name",
+    lastName: "last-name",
+    modal: "modal",
+    modalControlWrapper: "modal-control-wrapper",
+    phoneNumber: "phone-number",
+    searchField: "search-field",
+    searchFieldWrapper: "search-field-wrapper",
+    //
+
+    // RECENTS_TAB
+    recentsTab: "recents-tab",
+    recentsTabButton: "recents-button",
+    //
+
+    // FAVOURITES_TAB
+    favouritesTab: "favourites-tab",
+    favouritesTabButton: "favourites-button",
+    //
+
+    // VOICEMAIL_TAB
+    voicemailTab: "voicemail-tab",
+    voicemailTabButton: "voicemail-button",
+    //
+
+    // KEYPAD_TAB
+    addNumber: "add-number",
+    buttonCharacters: "button-characters",
+    callTab: 'call-tab',
+    callButton: "call-button",
+    callDeleteWrapper: "call-delete-wrapper",
     deleteButton: "delete-button",
     deleteSearchButton: "delete-search-button",
     dialButton: "dial",
     dialButtonPad: "dial-button-pad",
     display: "display",
-    email: "email",
-    endButton: "end-button",
-    endButtonElementWrapper: "end-button-element-wrapper",
-    favouritesTab: "favourites-tab",
-    favouritesTabButton: "favourites-button",
-    firstName: "first-name",
-    footer: "footer",
     header: "header",
     keypadTab: "keypad-tab",
     keypadTabButton: "keypad-button",
-    lastName: "last-name",
     main: "main",
-    modal: "modal",
-    modalControlWrapper: "modal-control-wrapper",
-    phoneNumber: "phone-number",
-    recentsTab: "recents-tab",
-    recentsTabButton: "recents-button",
-    searchField: "search-field",
-    searchFieldWrapper: "search-field-wrapper",
-    voicemailTab: "voicemail-tab",
-    voicemailTabButton: "voicemail-button",
+    //
+
+    // IN_CALL_TAB
+    endButton: "end-button",
+    endButtonElementWrapper: "end-button-element-wrapper",
+    inCallFooter: "in-call-footer",
+    inCallOptionsButton: "in-call-options-button",
+    //
+
+    app: "app",
+    footer: "footer",
 }
 
 const INPUTS = [
@@ -335,34 +352,37 @@ const renderAddNumberModal = () => {
 
 // HIDDEN VIEWS
 const renderCall = (phoneNumber) => {
-    handleFooterElementOnClick("call")
+    // handleFooterElementOnClick("call")
     removeElementsOnTabChange('call')
+    document.getElementById("footer").remove()
 
     const headerElement = createElement('header', undefined, callTabElement)
 
     createElement('p', {
+        id: ELEMENT_IDS.display,
         innerText: phoneNumber
     }, headerElement)
 
     createElement('p', {
+        className: CLASS_NAMES.displayText,
         innerText: INNER_TEXTS.callHeader
     }, headerElement)
-
-
 
     const mainElement = createElement('main', undefined, callTabElement)
     IN_CALL_BUTTONS_ARRAY.forEach((button) => {
         createElement("button", {
+            id: ELEMENT_IDS.inCallOptionsButton,
             className: CLASS_NAMES.dialButton,
             innerText: button.value
         }, mainElement)
     })
 
-
-    const footerElement = createElement("footer", undefined, callTabElement)
+    const footerElement = createElement("footer", {
+        id: ELEMENT_IDS.inCallFooter
+    }, callTabElement)
 
     const endButtonElement = createElement("button", {
-        // id: ELEMENT_IDS.endButton,
+        id: ELEMENT_IDS.endButton,
         className: CLASS_NAMES.dialButton,
         onclick: () => renderKeypad()
     }, footerElement)
@@ -378,69 +398,61 @@ const renderContacts = () => {
     handleFooterElementOnClick("contacts")
     removeElementsOnTabChange("contacts")
 
-    // REMOVE everything from divs having tabNames
+    const contactsHeaderElement = createElement("div", {
+        id: ELEMENT_IDS.contactsHeader
+    }, contactsTabElement)
 
-    // document.querySelectorAll(`#header, #main`).forEach((oldElement) => oldElement.remove())
+    const backButtonElement = createElement("button", {
+        innerText: INNER_TEXTS.backButtonElement,
+        className: CLASS_NAMES.contactsControls,
+        onclick: () => {
+            document.querySelectorAll("#contacts-header-element, #contact-element, #search-field-wrapper").forEach((oldElement) => oldElement.remove())
 
-    const contactsHeaderElement = document.createElement("div")
-    contactsHeaderElement.id = ELEMENT_IDS.contactsHeader
+            document.getElementById(ELEMENT_IDS.contactsTabButton).disabled = false
 
-    const backButtonElement = document.createElement("button")
-    backButtonElement.innerText = INNER_TEXTS.backButtonElement
-    backButtonElement.className = CLASS_NAMES.contactsControls
-    backButtonElement.onclick = () => {
-        document.querySelectorAll("#contacts-header-element, #contact-element, #search-field-wrapper").forEach((oldElement) => oldElement.remove())
+            callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
+            mainElement.appendChild(callDeleteWrapperElement)
 
-        document.getElementById(ELEMENT_IDS.contactsTabButton).disabled = false
+            contactsTabElement.append(headerElement, mainElement, footerElement)
+        }
+    }, contactsHeaderElement)
 
-        callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
-        mainElement.appendChild(callDeleteWrapperElement)
+    const contactsTitleElement = createElement("p", {
+        id: ELEMENT_IDS.contactsTitle,
+        innerText: INNER_TEXTS.contactsTitleElement
+    }, contactsHeaderElement)
 
-        contactsTabElement.append(headerElement, mainElement, footerElement)
-    }
+    const plusButtonElement = createElement("button", {
+        innerText: INNER_TEXTS.plusButtonElement,
+        className: CLASS_NAMES.contactsControls,
+        onclick: renderAddNumberModal
+    }, contactsHeaderElement)
 
-    const contactsTitleElement = document.createElement("p")
-    contactsTitleElement.id = ELEMENT_IDS.contactsTitle
-    contactsTitleElement.innerText = INNER_TEXTS.contactsTitleElement
+    const searchFieldWrapperElement = createElement("div", {
+        id: ELEMENT_IDS.searchFieldWrapper
+    }, contactsTabElement)
 
-    const plusButtonElement = document.createElement("button")
-    plusButtonElement.innerText = INNER_TEXTS.plusButtonElement
-    plusButtonElement.className = CLASS_NAMES.contactsControls
-    plusButtonElement.onclick = renderAddNumberModal
+    const searchFieldElement = createElement("insert", {
+        id: ELEMENT_IDS.searchField,
+        placeholder: "Search",
+        attribute: "text"
+    }, searchFieldWrapperElement)
 
-    contactsHeaderElement.appendChild(backButtonElement)
-    contactsHeaderElement.appendChild(contactsTitleElement)
-    contactsHeaderElement.appendChild(plusButtonElement)
-    contactsTabElement.appendChild(contactsHeaderElement)
+    const deleteSearchButtonElement = createElement("button", {
+        id: ELEMENT_IDS.deleteSearchButton,
+        innerText: INNER_TEXTS.deleteSearchButton
+    }, searchFieldElement)
 
-    const searchFieldWrapperElement = document.createElement("div")
-    searchFieldWrapperElement.id = ELEMENT_IDS.searchFieldWrapper
-
-    const searchFieldElement = document.createElement("insert")
-    searchFieldElement.id = ELEMENT_IDS.searchField
-    searchFieldElement.placeholder = "Search"
-    searchFieldElement.setAttribute("type", "text")
-
-    const deleteSearchButtonElement = document.createElement("button")
-    deleteSearchButtonElement.id = ELEMENT_IDS.deleteSearchButton
-    deleteSearchButtonElement.innerText = INNER_TEXTS.deleteSearchButton
-
-    const cancelSearchButtonElement = document.createElement("button")
-    cancelSearchButtonElement.id = ELEMENT_IDS.cancelSearchButton
-    cancelSearchButtonElement.innerText = INNER_TEXTS.cancelButtonElement
-
-    searchFieldElement.appendChild(deleteSearchButtonElement)
-    searchFieldWrapperElement.appendChild(searchFieldElement)
-    searchFieldWrapperElement.appendChild(cancelSearchButtonElement)
-    appElement.insertBefore(searchFieldWrapperElement, footerElement)
-    contactsTabElement.appendChild(searchFieldWrapperElement)
+    const cancelSearchButtonElement = createElement("button", {
+        id: ELEMENT_IDS.cancelSearchButton,
+        innerText: INNER_TEXTS.cancelButtonElement
+    }, searchFieldWrapperElement)
 
     CONTACTS.forEach((person) => {
-        const contactElement = document.createElement("div")
-        contactElement.id = ELEMENT_IDS.contact
-        contactElement.innerText = `${person.firstName} ${person.lastName}`
-
-        appElement.insertBefore(contactElement, footerElement)
+        const contactElement = createElement("div", {
+            id: ELEMENT_IDS.contact,
+            innerText: `${person.firstName} ${person.lastName}`
+        }, appElement)
     })
 }
 
@@ -456,7 +468,6 @@ const renderRecents = () => {
 const renderKeypad = () => {
     handleFooterElementOnClick("keypad")
     removeElementsOnTabChange("keypad")
-
 
     // TODO: Create a separate helper function which similiar to above one which will remove everything from divs with IDs having tabName
 
@@ -495,7 +506,6 @@ const renderKeypad = () => {
                 innerText: INNER_TEXTS.addNumberElement,
                 onclick: renderAddNumberModal
             }, headerElement)
-
 
             const deleteButtonElement = createElement('button', {
                 id: ELEMENT_IDS.deleteButton,
@@ -541,7 +551,6 @@ const renderKeypad = () => {
         className: CLASS_NAMES.dialValues,
         innerText: INNER_TEXTS.dialValuesCall
     }, callButtonElement)
-
 
     DIAL_BUTTONS_ARRAY.forEach((button) => {
         const dialButtonElement = createElement("button", {
