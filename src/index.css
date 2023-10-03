@@ -29,6 +29,7 @@ header {
     justify-content: center;
     align-items: center;
     font-size: 50px;
+    margin: 0;
 }
 
 #add-number {
@@ -39,6 +40,15 @@ header {
     align-items: center;
     font-weight: bold;
     cursor: pointer;
+}
+
+.display-text {
+    border: 2px solid green;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
 }
 
 #keypad-tab {
@@ -89,6 +99,10 @@ header {
 .dial-values {
     font-weight: bold;
     font-size: large;
+}
+
+#in-call-options-button {
+    font-weight: bold;
 }
 
 footer {
@@ -248,4 +262,8 @@ footer {
     justify-items: center;
     align-items: center;
     gap: 10px;
+}
+
+#in-call-footer {
+    margin-top: 100px;
 }
