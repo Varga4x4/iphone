@@ -142,7 +142,7 @@ const ELEMENT_IDS = {
     //
 
     app: "app",
-    footer: "footer",
+    footerButtonsWrapper: "footer-buttons-wrapper",
 }
 
 const INPUTS = [
@@ -201,7 +201,7 @@ const deleteButtonElement = document.getElementById(ELEMENT_IDS.deleteButton)
 const dialButtonPadElement = document.getElementById(ELEMENT_IDS.dialButtonPad)
 const displayElement = document.getElementById(ELEMENT_IDS.display)
 const favouritesButtonElement = document.getElementById(ELEMENT_IDS.favouritesTabButton)
-const footerElement = document.querySelector(ELEMENT_IDS.footer)
+const footerElement = document.querySelector(ELEMENT_IDS.footerButtonsWrapper)
 const headerElement = document.querySelector(ELEMENT_IDS.header)
 const keypadButtonElement = document.getElementById(ELEMENT_IDS.keypadTabButton)
 const mainElement = document.querySelector(ELEMENT_IDS.main)
@@ -218,6 +218,14 @@ const voicemailTabElement = document.getElementById(ELEMENT_IDS.voicemailTab)
 
 ////
 //
+
+//////
+// Uncaught ReferenceError: searchFieldWrapperElement is not defined => error in console when visiting contacts
+// keypad view has nice semantic structure in html, and contact don't => this could be improved to have the same consistency across all screens
+// In renderContacts I suggest you do add comment to each section, so you could easily navigate around
+// Each rendered contact should be a button as I assume you could click into it and do/see something inside.
+// As because you are strugling now with refactor, I suggest you to comment out search feature and restore it back later on.
+//////
 
 // HELPERS
 const handleFooterElementOnClick = (tabName) => {
@@ -266,6 +274,53 @@ const createElement = (tagType, attrObj, parentElement) => {
 //
 
 // MODULES
+// HIDDEN VIEWS
+// RENDER_CALL working!
+const renderCall = (phoneNumber) => {
+    handleFooterElementOnClick("call")
+    removeElementsOnTabChange('call')
+    document.getElementById(ELEMENT_IDS.footerButtonsWrapper).style.visibility = "hidden"
+
+    const headerElement = createElement('header', undefined, callTabElement)
+
+    createElement('p', {
+        id: ELEMENT_IDS.display,
+        innerText: phoneNumber
+    }, headerElement)
+
+    createElement('p', {
+        className: CLASS_NAMES.displayText,
+        innerText: INNER_TEXTS.callHeader
+    }, headerElement)
+
+    const mainElement = createElement('main', undefined, callTabElement)
+    IN_CALL_BUTTONS_ARRAY.forEach((button) => {
+        createElement("button", {
+            id: ELEMENT_IDS.inCallOptionsButton,
+            className: CLASS_NAMES.dialButton,
+            innerText: button.value
+        }, mainElement)
+    })
+
+    const footerElement = createElement("footer", {
+        id: ELEMENT_IDS.inCallFooter
+    }, callTabElement)
+
+    const endButtonElement = createElement("button", {
+        id: ELEMENT_IDS.endButton,
+        className: CLASS_NAMES.dialButton,
+        onclick: () => {
+            document.getElementById(ELEMENT_IDS.footerButtonsWrapper).style.visibility = "visible"
+            renderKeypad()
+        }
+    }, footerElement)
+
+    createElement("p", {
+        className: CLASS_NAMES.dialValues,
+        innerText: INNER_TEXTS.endButtonElement
+    }, endButtonElement)
+}
+
 // MODAL
 const renderAddNumberModal = () => {
     const modalElement = createElement("div", {
@@ -274,15 +329,15 @@ const renderAddNumberModal = () => {
 
     const modalControlWrapperElement = createElement("div", {
         id: ELEMENT_IDS.modalControlWrapper
-    }, modalElement)
+    })
 
     const addPhotoElementWrapper = createElement("div", {
         id: ELEMENT_IDS.addPhotoElementWrapper
-    }, modalElement)
+    })
 
     const addDetailsElementWrapper = document.createElement("div", {
         id: ELEMENT_IDS.addDetailsElementWrapper
-    }, modalElement)
+    })
 
     createElement("button", {
         innerText: INNER_TEXTS.cancelButtonElement,
@@ -344,61 +399,14 @@ const renderAddNumberModal = () => {
         }
     }, addPhotoElementWrapper)
 
-    // If I switch off these, Add Number not working, if it is on, it's good, don't know why...
-    // modalElement.append(
-    //     modalControlWrapperElement,
-    //     addPhotoElementWrapper,
-    //     addDetailsElementWrapper
-    // )
+    modalElement.append(
+        modalControlWrapperElement,
+        addPhotoElementWrapper,
+        addDetailsElementWrapper
+    )
     document.body.insertBefore(modalElement, appElement)
 }
 //
-
-// HIDDEN VIEWS
-const renderCall = (phoneNumber) => {
-    handleFooterElementOnClick("call")
-    removeElementsOnTabChange('call')
-    document.getElementById("footer").style.visibility = "hidden"
-
-    const headerElement = createElement('header', undefined, callTabElement)
-
-    createElement('p', {
-        id: ELEMENT_IDS.display,
-        innerText: phoneNumber
-    }, headerElement)
-
-    createElement('p', {
-        className: CLASS_NAMES.displayText,
-        innerText: INNER_TEXTS.callHeader
-    }, headerElement)
-
-    const mainElement = createElement('main', undefined, callTabElement)
-    IN_CALL_BUTTONS_ARRAY.forEach((button) => {
-        createElement("button", {
-            id: ELEMENT_IDS.inCallOptionsButton,
-            className: CLASS_NAMES.dialButton,
-            innerText: button.value
-        }, mainElement)
-    })
-
-    const footerElement = createElement("footer", {
-        id: ELEMENT_IDS.inCallFooter
-    }, callTabElement)
-
-    const endButtonElement = createElement("button", {
-        id: ELEMENT_IDS.endButton,
-        className: CLASS_NAMES.dialButton,
-        onclick: () => {
-            document.getElementById("footer").style.visibility = "visible"
-            renderKeypad()
-        }
-    }, footerElement)
-
-    createElement("p", {
-        className: CLASS_NAMES.dialValues,
-        innerText: INNER_TEXTS.endButtonElement
-    }, endButtonElement)
-}
 
 // VIEWS
 const renderContacts = () => {
@@ -413,14 +421,7 @@ const renderContacts = () => {
         innerText: INNER_TEXTS.backButtonElement,
         className: CLASS_NAMES.contactsControls,
         onclick: () => {
-            document.querySelectorAll("#contacts-header-element, #contact-element, #search-field-wrapper").forEach((oldElement) => oldElement.remove())
-
-            document.getElementById(ELEMENT_IDS.contactsTabButton).disabled = false
-
-            callDeleteWrapperElement.append(callButtonElement, deleteButtonElement)
-            mainElement.appendChild(callDeleteWrapperElement)
-
-            contactsTabElement.append(headerElement, mainElement, footerElement)
+            renderKeypad()
         }
     }, contactsHeaderElement)
 
@@ -435,32 +436,35 @@ const renderContacts = () => {
         onclick: renderAddNumberModal
     }, contactsHeaderElement)
 
-    createElement("div", {
+    const searchFieldWrapperElement = document.createElement("div", {
         id: ELEMENT_IDS.searchFieldWrapper
-    }, contactsTabElement)
+    })
 
     const searchFieldElement = createElement("insert", {
         id: ELEMENT_IDS.searchField,
         placeholder: "Search",
         attribute: "text"
-    }, searchFieldWrapperElement)
+    })
 
     createElement("button", {
         id: ELEMENT_IDS.deleteSearchButton,
         innerText: INNER_TEXTS.deleteSearchButton
     }, searchFieldElement)
 
-    createElement("button", {
+    const cancelSearchButtonElement = document.createElement("button", {
         id: ELEMENT_IDS.cancelSearchButton,
         innerText: INNER_TEXTS.cancelButtonElement
-    }, searchFieldWrapperElement)
+    })
 
     CONTACTS.forEach((person) => {
-        createElement("div", {
+        createElement("button", {
             id: ELEMENT_IDS.contact,
             innerText: `${person.firstName} ${person.lastName}`
         }, appElement)
     })
+
+    contactsTabElement.append(searchFieldWrapperElement)
+    searchFieldWrapperElement.append(searchFieldElement, cancelSearchButtonElement)
 }
 
 const renderFavourites = () => {
@@ -472,6 +476,7 @@ const renderRecents = () => {
     handleFooterElementOnClick("recents")
 }
 
+// RENDER_KEYPAD working!
 const renderKeypad = () => {
     handleFooterElementOnClick("keypad")
     removeElementsOnTabChange("keypad")
@@ -480,11 +485,6 @@ const renderKeypad = () => {
     }, keypadTabElement)
 
     const renderDisplay = (numberToAdd) => {
-        const displayElement = createElement("div", {
-            id: ELEMENT_IDS.display,
-            innerText: INNER_TEXTS.displayElement
-        })
-
         // Remove old elements
         document.getElementById(ELEMENT_IDS.addNumber)?.remove()
         document.getElementById(ELEMENT_IDS.deleteButton)?.remove()
@@ -501,8 +501,6 @@ const renderKeypad = () => {
         displayElement.innerText = newValue
 
         if (newValue.length) {
-            headerElement.append(displayElement)
-
             createElement('p', {
                 id: ELEMENT_IDS.addNumber,
                 innerText: INNER_TEXTS.addNumberElement,
@@ -516,7 +514,6 @@ const renderKeypad = () => {
                 id: ELEMENT_IDS.deleteButton,
                 className: CLASS_NAMES.dialButton,
                 onclick: () => {
-                    document.getElementById(ELEMENT_IDS.display)?.remove()
                     renderDisplay()
                 }
             })
@@ -537,6 +534,11 @@ const renderKeypad = () => {
     }
 
     // MAIN THREAD
+    const displayElement = createElement("div", {
+        id: ELEMENT_IDS.display,
+        innerText: INNER_TEXTS.displayElement
+    }, headerElement)
+
     const mainElement = createElement("main", {
         className: CLASS_NAMES.main
     }, keypadTabElement)

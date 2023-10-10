@@ -105,7 +105,8 @@ header {
     font-weight: bold;
 }
 
-footer {
+#footer-buttons-wrapper,
+#in-call-footer {
     border: 2px solid orange;
     height: 100px;
     display: flex;
@@ -266,8 +267,4 @@ footer {
 
 #in-call-footer {
     margin-top: 100px;
-}
-
-[disabled] {
-    cursor: default;
 }
