@@ -7,6 +7,7 @@ body {
     justify-content: center;
 }
 
+
 #app {
     border: 2px solid black;
     height: 900px;
@@ -14,7 +15,7 @@ body {
     margin: 0;
 }
 
-header {
+#keypad-tab>header {
     border: 2px solid red;
     height: 200px;
     display: flex;
@@ -23,7 +24,8 @@ header {
     flex-direction: column;
 }
 
-#display {
+#keypad-tab>header>#display,
+#inCallTabHeaderDisplay {
     border: 2px solid red;
     display: flex;
     justify-content: center;
@@ -121,7 +123,7 @@ header {
     cursor: pointer;
 }
 
-#modal {
+#add-contact-modal {
     background: lightgray;
     height: 90%;
     width: 45%;
@@ -133,7 +135,7 @@ header {
     visibility: visible;
 }
 
-#modal-control-wrapper {
+#add-contact-modal>header {
     border: 2px solid red;
     height: 80px;
     width: 100%;
@@ -143,6 +145,13 @@ header {
     flex-direction: row;
     background-color: aqua;
     border-radius: 20px;
+}
+
+#contacts-tab-search-wrapper {
+    border: 1px solid orange;
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 .modal-controls {
@@ -158,7 +167,7 @@ header {
     font-weight: bolder;
 }
 
-#add-photo-element-wrapper {
+#add-photo-wrapper {
     border: 2px solid blue;
     height: 200px;
     width: 100%;
@@ -173,7 +182,7 @@ header {
     cursor: pointer;
 }
 
-#add-details-element-wrapper {
+#add-contacts-modal>main {
     border: 2px solid yellow;
     width: 100%;
     display: flex;
@@ -191,8 +200,8 @@ header {
     font-weight: bold;
 }
 
-#contacts-header-element {
-    border: 2px solid red;
+#contacts-tab>header {
+    border: 2px solid blue;
     height: 100px;
     display: flex;
     justify-content: space-around;
@@ -224,7 +233,7 @@ header {
     color: white;
 }
 
-#search-field-wrapper {
+#contacts-tab>main {
     border: 2px solid red;
     height: 100px;
     display: flex;
