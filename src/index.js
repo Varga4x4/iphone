@@ -71,11 +71,13 @@ const IN_CALL_BUTTONS_ARRAY = [
 const CONTACTS = []
 
 const CLASS_NAMES = {
+    contact: "contact-element",
     contactsControls: "contacts-controls",
     details: "details",
     dialButton: "dial-button",
     dialValues: "dial-values",
     displayText: "display-text",
+    headerButtons: "header-buttons",
     modalControls: "modal-controls",
     newContactTitle: "new-contact",
 }
@@ -91,12 +93,12 @@ const ELEMENT_IDS = {
     addContactModal: "add-contact-modal",
 
     // CONTACTS_TAB
-    contact: "contact-element",
     contactsTab: "contacts-tab",
     contactsTabButton: "contacts-button",
     contactsTabSearchWrapper: 'contacts-tab-search-wrapper',
     contactsHeader: "contacts-header-element",
     contactsTitle: "contacts-title",
+    contactsWrapper: "contacts-wrapper",
     searchField: "search-field",
     //
 
@@ -195,11 +197,13 @@ const deleteButtonElement = document.getElementById(ELEMENT_IDS.deleteButton)
 const dialButtonPadElement = document.getElementById(ELEMENT_IDS.dialButtonPad)
 const favouritesButtonElement = document.getElementById(ELEMENT_IDS.favouritesTabButton)
 const appfooterElement = document.querySelector(`#${ELEMENT_IDS.app} > footer`)
+
+
 // WRONG
-const headerElement = document.querySelector(ELEMENT_IDS.header)
+const headerElement = document.getElementById(ELEMENT_IDS.header)
 const keypadButtonElement = document.getElementById(ELEMENT_IDS.keypadTabButton)
 // WRONG
-const mainElement = document.querySelector(ELEMENT_IDS.main)
+const mainElement = document.getElementById(ELEMENT_IDS.main)
 const callTabElement = document.getElementById(ELEMENT_IDS.callTab)
 const recentsButtonElement = document.getElementById(ELEMENT_IDS.recentsTabButton)
 const voicemailButtonElement = document.getElementById(ELEMENT_IDS.voicemailTabButton)
@@ -224,7 +228,7 @@ const handleFooterElementOnClick = (tabName) => {
         document.getElementById(tabId).disabled = tabId === tabNameTabButtonIdValue
     })
 }
-1
+
 const removeElementsOnTabChange = (tabName) => {
     const allTabIds = Object.entries(ELEMENT_IDS)
         .filter(entry => entry[0].endsWith('Tab'))
@@ -266,8 +270,6 @@ const renderCall = (phoneNumber) => {
     handleFooterElementOnClick("call")
     removeElementsOnTabChange('call')
 
-
-    console.log(appfooterElement)
     appfooterElement.style.visibility = "hidden"
 
     // HEADER
@@ -327,7 +329,7 @@ const renderAddContactModal = () => {
 
     createElement("button", {
         innerText: INNER_TEXTS.cancelButtonElement,
-        className: CLASS_NAMES.modalControls,
+        className: CLASS_NAMES.headerButtons,
         onclick: () => {
             modalElement.remove()
         }
@@ -340,7 +342,7 @@ const renderAddContactModal = () => {
 
     createElement("button", {
         innerText: INNER_TEXTS.doneButttonElement,
-        className: CLASS_NAMES.modalControls,
+        className: CLASS_NAMES.headerButtons,
         // TODO: fix it
         // disabled: true,
         onclick: () => {
@@ -363,7 +365,6 @@ const renderAddContactModal = () => {
 
     // MAIN
     const mainElement = createElement("main", undefined, modalElement)
-
 
     //// ADD PHOTO
     const addPhotoElementWrapper = createElement("div", {
@@ -407,12 +408,10 @@ const renderContacts = () => {
     removeElementsOnTabChange("contacts")
 
     // HEADER
-    // TODO: create createUniversalHeader Function
     const headerElement = createElement("header", undefined, contactsTabElement)
     createElement("button", {
         innerText: INNER_TEXTS.backButtonElement,
-        // These classnames should be the same for each header buttons
-        className: CLASS_NAMES.contactsControls,
+        className: CLASS_NAMES.headerButtons,
         onclick: renderKeypad
     }, headerElement)
 
@@ -423,8 +422,7 @@ const renderContacts = () => {
 
     createElement("button", {
         innerText: INNER_TEXTS.plusButtonElement,
-        // These classnames should be the same for each header buttons
-        className: CLASS_NAMES.contactsControls,
+        className: CLASS_NAMES.headerButtons,
         onclick: renderAddContactModal
     }, headerElement)
     //
@@ -453,17 +451,22 @@ const renderContacts = () => {
     }, searchWrapperElement)
     ////
 
-
     //// CONTACTS
-    // TODO: create wrapper for all these contacs
-    CONTACTS.forEach((person) => {
-        createElement("button", {
-            // TODO: wrong - cannot be id as there is more than 1
-            id: ELEMENT_IDS.contact,
-            innerText: `${person.firstName} ${person.lastName}`
-            // TODO: missing onClick: at the moment should be only console log
-        }, mainElement)
+    const contactsWrapperElement = createElement("div", {
+        id: ELEMENT_IDS.contactsWrapper
     })
+
+    CONTACTS.forEach((person) => {
+        const contactElement = createElement("button", {
+            className: CLASS_NAMES.contact,
+            innerText: `${person.firstName} ${person.lastName}`,
+            onclick: () => console.log(person)
+        })
+
+        contactsWrapperElement.append(contactElement)
+    }, contactsWrapperElement)
+
+    mainElement.append(contactsWrapperElement)
     ////
     //
 }
