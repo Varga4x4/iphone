@@ -45,7 +45,6 @@ body {
 
 #add-number {
     border: 2px solid green;
-    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,7 +54,6 @@ body {
 
 .display-text {
     border: 2px solid green;
-    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,6 +85,12 @@ body {
     justify-items: center;
     align-items: center;
     margin-top: 10px;
+    gap: 10px;
+}
+
+/* Why is this  ot working? */
+#keypad-tab>main {
+    gap: 100px;
 }
 
 #call-button {
@@ -99,7 +103,7 @@ body {
     border: 2px solid red;
     width: 100px;
     height: 100px;
-    border-radius: 20px;
+    border-radius: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -108,16 +112,30 @@ body {
 }
 
 .dial-values {
-    font-weight: bold;
-    font-size: large;
+    /* font-weight: bold; */
+    font-size: 40px;
+    margin: 0;
+}
+
+#button-characters {
+    margin: 0;
 }
 
 #in-call-options-button {
     font-weight: bold;
+    color: white;
+    background: black;
 }
 
-#footer-buttons-wrapper,
-#in-call-footer {
+#app>footer {
+    border: 2px solid orange;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#call-tab>footer {
     border: 2px solid orange;
     height: 100px;
     display: flex;
@@ -163,7 +181,7 @@ body {
     width: 100%;
 }
 
-.new-contact {
+.header-title {
     font-size: 40px;
     font-weight: bolder;
 }
@@ -193,6 +211,8 @@ body {
 
 #contacts-wrapper {
     border: 2px solid blue;
+    display: flex;
+    flex-direction: column;
 }
 
 .details {
@@ -203,6 +223,8 @@ body {
 .contact-element {
     font-size: larger;
     font-weight: bold;
+    display: flex;
+    align-items: flex-start;
 }
 
 #contacts-tab>header {
@@ -249,19 +271,16 @@ body {
     flex-direction: column;
 }
 
-
 #voicemail-button,
 #recents-button,
 #favourites-button {
     background-color: red;
 }
 
-
-
-/* NEW */
 #call-tab {
     border: 2px solid gold;
     flex-direction: column;
+    gap: 100px
 }
 
 #call-tab>main {
@@ -271,8 +290,4 @@ body {
     justify-items: center;
     align-items: center;
     gap: 10px;
-}
-
-#in-call-footer {
-    margin-top: 100px;
 }
