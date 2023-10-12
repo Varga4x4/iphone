@@ -15,7 +15,8 @@ body {
     margin: 0;
 }
 
-#keypad-tab>header {
+#keypad-tab>header,
+#call-tab>header {
     border: 2px solid red;
     height: 200px;
     display: flex;
@@ -25,13 +26,21 @@ body {
 }
 
 #keypad-tab>header>#display,
-#inCallTabHeaderDisplay {
+#in-call-header-display {
     border: 2px solid red;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 50px;
     margin: 0;
+}
+
+.header-buttons {
+    height: 50px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
 }
 
 #add-number {
@@ -154,14 +163,6 @@ body {
     width: 100%;
 }
 
-.modal-controls {
-    height: 50px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: large;
-    cursor: pointer;
-}
-
 .new-contact {
     font-size: 40px;
     font-weight: bolder;
@@ -190,12 +191,16 @@ body {
     gap: 10px;
 }
 
+#contacts-wrapper {
+    border: 2px solid blue;
+}
+
 .details {
     width: 400px;
     font-size: 30px;
 }
 
-#contact-element {
+.contact-element {
     font-size: larger;
     font-weight: bold;
 }
@@ -206,13 +211,6 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
-}
-
-.contacts-controls {
-    height: 50px;
-    font-size: larger;
-    font-weight: bold;
-    cursor: pointer;
 }
 
 #contacts-title {
@@ -237,6 +235,7 @@ body {
     border: 2px solid red;
     height: 100px;
     display: flex;
+    flex-direction: column;
 }
 
 #search-field {
