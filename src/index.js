@@ -78,8 +78,8 @@ const CLASS_NAMES = {
     dialValues: "dial-values",
     displayText: "display-text",
     headerButtons: "header-buttons",
+    headerTitle: "header-title",
     modalControls: "modal-controls",
-    newContactTitle: "new-contact",
 }
 
 const ELEMENT_IDS = {
@@ -183,7 +183,7 @@ const INNER_TEXTS = {
     contactsTitleElement: "Contacts",
     doneButttonElement: "Done",
     endButtonElement: "End",
-    newContactTitleElement: "New Contact",
+    headerTitleElement: "New Contact",
     plusButtonElement: "+",
 }
 //
@@ -197,7 +197,6 @@ const deleteButtonElement = document.getElementById(ELEMENT_IDS.deleteButton)
 const dialButtonPadElement = document.getElementById(ELEMENT_IDS.dialButtonPad)
 const favouritesButtonElement = document.getElementById(ELEMENT_IDS.favouritesTabButton)
 const appfooterElement = document.querySelector(`#${ELEMENT_IDS.app} > footer`)
-
 
 // WRONG
 const headerElement = document.getElementById(ELEMENT_IDS.header)
@@ -271,6 +270,7 @@ const renderCall = (phoneNumber) => {
     removeElementsOnTabChange('call')
 
     appfooterElement.style.visibility = "hidden"
+    appElement.style.background = "darkgrey"
 
     // HEADER
     const headerElement = createElement('header', undefined, callTabElement)
@@ -298,9 +298,7 @@ const renderCall = (phoneNumber) => {
     //
 
     // FOOTER
-    const footerElement = createElement("footer", {
-        id: ELEMENT_IDS.inCallFooter
-    }, callTabElement)
+    const footerElement = createElement("footer", undefined, callTabElement)
 
     const endButtonElement = createElement("button", {
         id: ELEMENT_IDS.endButton,
@@ -336,8 +334,8 @@ const renderAddContactModal = () => {
     }, headerElement)
 
     createElement("p", {
-        innerText: INNER_TEXTS.newContactTitleElement,
-        className: CLASS_NAMES.newContactTitle
+        innerText: INNER_TEXTS.headerTitleElement,
+        className: CLASS_NAMES.headerTitle
     }, headerElement)
 
     createElement("button", {
@@ -423,6 +421,8 @@ const renderContacts = () => {
     createElement("button", {
         innerText: INNER_TEXTS.plusButtonElement,
         className: CLASS_NAMES.headerButtons,
+
+        // Not working
         onclick: renderAddContactModal
     }, headerElement)
     //
