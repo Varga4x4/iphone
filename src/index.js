@@ -80,6 +80,7 @@ const CLASS_NAMES = {
     headerButtons: "header-buttons",
     headerTitle: "header-title",
     modalControls: "modal-controls",
+    contactContactOptionsButton: "contact-contact-options-button"
 }
 
 const ELEMENT_IDS = {
@@ -87,7 +88,7 @@ const ELEMENT_IDS = {
     addEmail: "email",
     addFirstName: "first-name",
     addLastName: "last-name",
-    addPhoneNumber: "phone-number",
+    addPhoneNumber: "add-phone-number",
     addPhoto: "add-photo",
     addPhotoWrapper: "add-photo-wrapper",
     addContactModal: "add-contact-modal",
@@ -142,6 +143,12 @@ const ELEMENT_IDS = {
     //
 
     app: "app",
+    viewContact: "view-contact-tab",
+    photo: "photo",
+    contactName: "contact-name",
+    contactContactOptionsButtonsWrapper: "contact-contact-options-buttons-wrapper",
+    phoneNumberElement: "phone-number-element",
+    emailElement: "email-element",
 }
 
 const INPUTS = [
@@ -160,6 +167,7 @@ const INPUTS = [
     {
         id: ELEMENT_IDS.addPhoneNumber,
         className: CLASS_NAMES.details,
+        placeholder: "Phone number",
         getValue: (element) => element.innerText,
         idOfElementHavingValue: ELEMENT_IDS.keypadTabHeaderDisplay
     },
@@ -185,6 +193,11 @@ const INNER_TEXTS = {
     endButtonElement: "End",
     headerTitleElement: "New Contact",
     plusButtonElement: "+",
+    editButtonElement: "Edit",
+    videoCallButtonElement: "Video",
+    messageButtonElement: "Message",
+    emailButtonElement: "Email",
+    phoneNumberElement: "Phone",
 }
 //
 
@@ -197,6 +210,7 @@ const deleteButtonElement = document.getElementById(ELEMENT_IDS.deleteButton)
 const dialButtonPadElement = document.getElementById(ELEMENT_IDS.dialButtonPad)
 const favouritesButtonElement = document.getElementById(ELEMENT_IDS.favouritesTabButton)
 const appfooterElement = document.querySelector(`#${ELEMENT_IDS.app} > footer`)
+const viewContactElement = document.getElementById(ELEMENT_IDS.viewContact)
 
 // WRONG
 const headerElement = document.getElementById(ELEMENT_IDS.header)
@@ -260,6 +274,94 @@ const createElement = (tagType, attrObj, parentElement) => {
 
     return newElement
 }
+
+const createGlobalHeader = ({ headerTitle, button1Label, button1OnClick, button2Label, button2OnClick, parentElement }) => {
+    const headerElement = createElement("header", undefined, parentElement)
+    createElement("button", {
+        innerText: button1Label,
+        // TODO: make it more generic
+        className: CLASS_NAMES.headerButtons,
+        onclick: button1OnClick
+    }, headerElement)
+
+    createElement("p", {
+        // TODO: make it more generic
+        id: ELEMENT_IDS.contactsTitle,
+        innerText: headerTitle
+    }, headerElement)
+
+    createElement("button", {
+        innerText: button2Label,
+        // TODO: make it more generic
+        className: CLASS_NAMES.headerButtons,
+        onclick: button2OnClick
+    }, headerElement)
+}
+
+const viewContact = () => {
+    handleFooterElementOnClick("view-contact")
+    removeElementsOnTabChange("view-contact")
+    createGlobalHeader({
+        headerTitle: "",
+        button1Label: INNER_TEXTS.backButtonElement,
+        button1OnClick: renderContacts,
+        button2Label: INNER_TEXTS.editButtonElement,
+        button2OnClick: console.log("This will edit the contact"),
+        parentElement: viewContactElement
+    })
+
+    // MAIN
+    const mainElement = createElement("main", undefined, viewContactElement)
+
+    const photoElement = createElement("div", {
+        id: ELEMENT_IDS.photo
+    }, mainElement)
+
+    const contactNameElement = createElement("p", {
+        id: ELEMENT_IDS.contactName,
+        innerText: "Name will go here"
+    }, mainElement)
+
+    const contactContactOptionsButtonsWrapperElement = createElement("div", {
+        id: ELEMENT_IDS.contactContactOptionsButtonsWrapper
+    }, mainElement)
+
+    const messageButtonElement = createElement("button", {
+        className: CLASS_NAMES.contactContactOptionsButton,
+        innerText: INNER_TEXTS.messageButtonElement,
+    }, contactContactOptionsButtonsWrapperElement)
+
+    const callContactButtonElement = createElement("button", {
+        className: CLASS_NAMES.contactContactOptionsButton,
+        innerText: INNER_TEXTS.dialValuesCall,
+    }, contactContactOptionsButtonsWrapperElement)
+
+    const videoCallContactButtonElement = createElement("button", {
+        className: CLASS_NAMES.contactContactOptionsButton,
+        innerText: INNER_TEXTS.videoCallButtonElement,
+    }, contactContactOptionsButtonsWrapperElement)
+
+    const emailContactButtonElement = createElement("button", {
+        className: CLASS_NAMES.contactContactOptionsButton,
+        innerText: INNER_TEXTS.emailButtonElement,
+    }, contactContactOptionsButtonsWrapperElement)
+
+    const phoneNumberElementWrapper = createElement("div", {
+        id: ELEMENT_IDS.phoneNumberElement,
+        innerText: INNER_TEXTS.phoneNumberElement
+    }, mainElement)
+    const phoneNumberElement = createElement("p", {
+        innerText: "phone number goes here"
+    }, phoneNumberElementWrapper)
+
+    const emailElementWrapper = createElement("div", {
+        id: ELEMENT_IDS.emailElement,
+        innerText: INNER_TEXTS.emailButtonElement
+    }, mainElement)
+    const emailElement = createElement("p", {
+        innerText: "email goes here"
+    }, emailElementWrapper)
+}
 //
 
 // MODULES
@@ -322,28 +424,12 @@ const renderAddContactModal = () => {
         id: ELEMENT_IDS.addContactModal
     })
 
-    // HEADER
-    const headerElement = createElement("header", undefined, modalElement)
-
-    createElement("button", {
-        innerText: INNER_TEXTS.cancelButtonElement,
-        className: CLASS_NAMES.headerButtons,
-        onclick: () => {
-            modalElement.remove()
-        }
-    }, headerElement)
-
-    createElement("p", {
-        innerText: INNER_TEXTS.headerTitleElement,
-        className: CLASS_NAMES.headerTitle
-    }, headerElement)
-
-    createElement("button", {
-        innerText: INNER_TEXTS.doneButttonElement,
-        className: CLASS_NAMES.headerButtons,
-        // TODO: fix it
-        // disabled: true,
-        onclick: () => {
+    createGlobalHeader({
+        headerTitle: INNER_TEXTS.headerTitleElement,
+        button1Label: INNER_TEXTS.cancelButtonElement,
+        button1OnClick: () => modalElement.remove(),
+        button2Label: INNER_TEXTS.doneButttonElement,
+        button2OnClick: () => {
             const lastNameElement = document.getElementById(ELEMENT_IDS.addLastName)
             const firstNameElement = document.getElementById(ELEMENT_IDS.addFirstName)
             const phoneNumberElement = document.getElementById(ELEMENT_IDS.addPhoneNumber)
@@ -357,9 +443,9 @@ const renderAddContactModal = () => {
             CONTACTS.push(newContact)
 
             modalElement.remove()
-        }
-    }, headerElement)
-    //
+        },
+        parentElement: modalElement
+    })
 
     // MAIN
     const mainElement = createElement("main", undefined, modalElement)
@@ -389,14 +475,37 @@ const renderAddContactModal = () => {
 
         if (input.getValue && input.idOfElementHavingValue) {
             const elementHavingValue = document.getElementById(input.idOfElementHavingValue)
-            inputElement.value = input.getValue(elementHavingValue)
+            inputElement.value = elementHavingValue ? input.getValue(elementHavingValue) : ""
         }
 
         inputElement.setAttribute("type", input.attribute)
     })
-    //
+    // 
 
     document.body.insertBefore(modalElement, appElement)
+
+    // const firstNameElement = document.getElementById(ELEMENT_IDS.addFirstName)
+    // let firstNameValue = firstNameElement.value
+    // const lastNameElement = document.getElementById(ELEMENT_IDS.addLastName)
+    // let lastNameValue = lastNameElement.value
+    // const condition1 = !!(firstNameValue || lastNameValue)
+
+    // const phoneNumberElement = document.getElementById(ELEMENT_IDS.addPhoneNumber)
+    // const condition2 = !!phoneNumberElement.value
+
+    // const shouldDoneButtonBeEnabled = condition1 && condition2
+    // console.log({ shouldDoneButtonBeEnabled })
+
+    // firstNameElement.addEventListener("keydown", (event) => {
+    //     console.log(event.target.value)
+    //     firstNameValue = event.target.value
+    //     console.log({ condition1 })
+    // })
+
+    // lastNameElement.addEventListener("keydown", (event) => {
+    //     console.log(event.target.value)
+    //     lastNameValue = event.target.value
+    // })
 }
 //
 
@@ -404,28 +513,14 @@ const renderAddContactModal = () => {
 const renderContacts = () => {
     handleFooterElementOnClick("contacts")
     removeElementsOnTabChange("contacts")
-
-    // HEADER
-    const headerElement = createElement("header", undefined, contactsTabElement)
-    createElement("button", {
-        innerText: INNER_TEXTS.backButtonElement,
-        className: CLASS_NAMES.headerButtons,
-        onclick: renderKeypad
-    }, headerElement)
-
-    createElement("p", {
-        id: ELEMENT_IDS.contactsTitle,
-        innerText: INNER_TEXTS.contactsTitleElement
-    }, headerElement)
-
-    createElement("button", {
-        innerText: INNER_TEXTS.plusButtonElement,
-        className: CLASS_NAMES.headerButtons,
-
-        // Not working
-        onclick: renderAddContactModal
-    }, headerElement)
-    //
+    createGlobalHeader({
+        headerTitle: INNER_TEXTS.contactsTitleElement,
+        button1Label: INNER_TEXTS.backButtonElement,
+        button1OnClick: renderKeypad,
+        button2Label: INNER_TEXTS.plusButtonElement,
+        button2OnClick: renderAddContactModal,
+        parentElement: contactsTabElement
+    })
 
     // MAIN
     const mainElement = createElement("main", undefined, contactsTabElement)
@@ -460,7 +555,7 @@ const renderContacts = () => {
         const contactElement = createElement("button", {
             className: CLASS_NAMES.contact,
             innerText: `${person.firstName} ${person.lastName}`,
-            onclick: () => console.log(person)
+            onclick: () => viewContact()
         })
 
         contactsWrapperElement.append(contactElement)
