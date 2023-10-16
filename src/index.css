@@ -227,7 +227,8 @@ body {
     align-items: flex-start;
 }
 
-#contacts-tab>header {
+#contacts-tab>header,
+#view-contact-tab>header {
     border: 2px solid blue;
     height: 100px;
     display: flex;
@@ -290,4 +291,60 @@ body {
     justify-items: center;
     align-items: center;
     gap: 10px;
+}
+
+#photo {
+    border: 2px solid blue;
+    border-radius: 100%;
+    background: lightblue;
+    height: 200px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: larger;
+}
+
+#contact-name {
+    font-size: larger;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#view-contact-tab>main {
+    border: 2px solid green;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#contact-contact-options-buttons-wrapper {
+    border: 2px solid red;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.contact-contact-options-button {
+    font-size: larger;
+    cursor: pointer;
+}
+
+#phone-number-element,
+#email-element {
+    border: 2px solid blueviolet;
+    width: 100%;
+    font-size: large;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+#phone-number-element>p,
+#email-element>p {
+    margin: 0;
 }
