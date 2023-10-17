@@ -293,7 +293,7 @@ body {
     gap: 10px;
 }
 
-#photo {
+#contact-photo {
     border: 2px solid blue;
     border-radius: 100%;
     background: lightblue;
@@ -302,7 +302,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: larger;
+    font-size: 50px;
 }
 
 #contact-name {
@@ -334,8 +334,8 @@ body {
     cursor: pointer;
 }
 
-#phone-number-element,
-#email-element {
+#contact-phone-number-wrapper,
+#contact-email-wrapper {
     border: 2px solid blueviolet;
     width: 100%;
     font-size: large;
@@ -344,7 +344,7 @@ body {
     flex-direction: column;
 }
 
-#phone-number-element>p,
-#email-element>p {
+#contact-phone-number-wrapper>p,
+#contact-email-wrapper>p {
     margin: 0;
 }
