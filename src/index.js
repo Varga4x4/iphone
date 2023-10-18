@@ -76,7 +76,6 @@ const CLASS_NAMES = {
     contactsControls: "contacts-controls",
     details: "details",
     modalControls: "modal-controls",
-
     //
 
     // KEYPAD_TAB
@@ -90,7 +89,7 @@ const CLASS_NAMES = {
     headerTitle: "header-title",
     //
 
-    // VIEW_CONTACT_TAB
+    // RENDER_CONTACT_TAB
     contactContactOptionsButton: "contact-contact-options-button",
     //
 }
@@ -154,7 +153,7 @@ const ELEMENT_IDS = {
     inCallTabHeaderDisplay: "in-call-header-display",
     //
 
-    // VIEW_CONTACT_TAB
+    // RENDER_CONTACT_TAB
     viewContact: "view-contact-tab",
     contactPhoto: "contact-photo",
     contactName: "contact-name",
@@ -225,7 +224,7 @@ const INNER_TEXTS = {
     plusButtonElement: "+",
     //
 
-    // VIEW_CONTACT_TAB
+    // RENDER_CONTACT_TAB
     videoCallButtonElement: "Video",
     messageButtonElement: "Message",
     emailButtonElement: "Email",
@@ -329,79 +328,7 @@ const createGlobalHeader = ({ headerTitle, button1Label, button1OnClick, button2
     }, headerElement)
 }
 
-const viewContact = (person) => {
-    handleFooterElementOnClick("view-contact")
-    removeElementsOnTabChange("view-contact")
-    createGlobalHeader({
-        headerTitle: "",
-        button1Label: INNER_TEXTS.backButtonElement,
-        button1OnClick: renderContacts,
-        button2Label: INNER_TEXTS.editButtonElement,
-        button2OnClick: () => console.log("This will edit the contact"),
-        parentElement: viewContactElement
-    })
 
-    // MAIN
-    const mainElement = createElement("main", undefined, viewContactElement)
-
-    const contactNameElement = createElement("p", {
-        id: ELEMENT_IDS.contactName,
-        innerText: `${person.firstName} ${person.lastName}`,
-    }, mainElement)
-
-    const photoElement = createElement("div", {
-        id: ELEMENT_IDS.contactPhoto,
-        innerText: contactNameElement.innerText.slice(0, 1)
-    })
-
-    mainElement.insertBefore(photoElement, contactNameElement)
-
-    const contactContactOptionsButtonsWrapperElement = createElement("div", {
-        id: ELEMENT_IDS.contactContactOptionsButtonsWrapper
-    }, mainElement)
-
-    const messageButtonElement = createElement("button", {
-        className: CLASS_NAMES.contactContactOptionsButton,
-        innerText: INNER_TEXTS.messageButtonElement,
-    }, contactContactOptionsButtonsWrapperElement)
-
-    const callContactButtonElement = createElement("button", {
-        className: CLASS_NAMES.contactContactOptionsButton,
-        innerText: INNER_TEXTS.dialValuesCall,
-        onclick: () => renderCall(savedPhoneNumber),
-    }, contactContactOptionsButtonsWrapperElement)
-
-    const videoCallContactButtonElement = createElement("button", {
-        className: CLASS_NAMES.contactContactOptionsButton,
-        innerText: INNER_TEXTS.videoCallButtonElement,
-    }, contactContactOptionsButtonsWrapperElement)
-
-    const emailContactButtonElement = createElement("button", {
-        className: CLASS_NAMES.contactContactOptionsButton,
-        innerText: INNER_TEXTS.emailButtonElement,
-    }, contactContactOptionsButtonsWrapperElement)
-
-    const phoneNumberElementWrapper = createElement("div", {
-        id: ELEMENT_IDS.contactPhoneNumberWrapper,
-        innerText: INNER_TEXTS.phoneNumberElement
-    }, mainElement)
-
-    const phoneNumberElement = createElement("p", {
-        id: ELEMENT_IDS.contactPhoneNumber,
-        innerText: person.phoneNumber
-    }, phoneNumberElementWrapper)
-
-    savedPhoneNumber = phoneNumberElement.innerText
-
-    const emailElementWrapper = createElement("div", {
-        id: ELEMENT_IDS.contactEmailWrapper,
-        innerText: INNER_TEXTS.emailButtonElement
-    }, mainElement)
-
-    const emailElement = createElement("p", {
-        innerText: person.eMail
-    }, emailElementWrapper)
-}
 //
 
 // MODULES
@@ -458,7 +385,7 @@ const renderCall = (displayedPhoneNumber) => {
     // 
 }
 
-// ADD CONTACT MODAL
+// ADD_CONTACT_MODAL
 const renderAddContactModal = () => {
     const modalElement = createElement("aside", {
         id: ELEMENT_IDS.addContactModal
@@ -547,6 +474,84 @@ const renderAddContactModal = () => {
     //     lastNameValue = event.target.value
     // })
 }
+
+const renderContact = (person) => {
+    handleFooterElementOnClick("view-contact")
+    removeElementsOnTabChange("view-contact")
+    createGlobalHeader({
+        headerTitle: "",
+        button1Label: INNER_TEXTS.backButtonElement,
+        button1OnClick: renderContacts,
+        button2Label: INNER_TEXTS.editButtonElement,
+        button2OnClick: () => renderEditContact(person),
+        parentElement: viewContactElement
+    })
+
+    // MAIN
+    const mainElement = createElement("main", undefined, viewContactElement)
+
+    const contactNameElement = createElement("p", {
+        id: ELEMENT_IDS.contactName,
+        innerText: `${person.firstName} ${person.lastName}`,
+    }, mainElement)
+
+    const photoElement = createElement("div", {
+        id: ELEMENT_IDS.contactPhoto,
+        innerText: contactNameElement.innerText.slice(0, 1)
+    })
+
+    mainElement.insertBefore(photoElement, contactNameElement)
+
+    const contactContactOptionsButtonsWrapperElement = createElement("div", {
+        id: ELEMENT_IDS.contactContactOptionsButtonsWrapper
+    }, mainElement)
+
+    const messageButtonElement = createElement("button", {
+        className: CLASS_NAMES.contactContactOptionsButton,
+        innerText: INNER_TEXTS.messageButtonElement,
+    }, contactContactOptionsButtonsWrapperElement)
+
+    const callContactButtonElement = createElement("button", {
+        className: CLASS_NAMES.contactContactOptionsButton,
+        innerText: INNER_TEXTS.dialValuesCall,
+        onclick: () => renderCall(savedPhoneNumber),
+    }, contactContactOptionsButtonsWrapperElement)
+
+    const videoCallContactButtonElement = createElement("button", {
+        className: CLASS_NAMES.contactContactOptionsButton,
+        innerText: INNER_TEXTS.videoCallButtonElement,
+    }, contactContactOptionsButtonsWrapperElement)
+
+    const emailContactButtonElement = createElement("button", {
+        className: CLASS_NAMES.contactContactOptionsButton,
+        innerText: INNER_TEXTS.emailButtonElement,
+    }, contactContactOptionsButtonsWrapperElement)
+
+    const phoneNumberElementWrapper = createElement("div", {
+        id: ELEMENT_IDS.contactPhoneNumberWrapper,
+        innerText: INNER_TEXTS.phoneNumberElement
+    }, mainElement)
+
+    const phoneNumberElement = createElement("p", {
+        id: ELEMENT_IDS.contactPhoneNumber,
+        innerText: person.phoneNumber
+    }, phoneNumberElementWrapper)
+
+    const savedPhoneNumber = phoneNumberElement.innerText
+
+    const emailElementWrapper = createElement("div", {
+        id: ELEMENT_IDS.contactEmailWrapper,
+        innerText: INNER_TEXTS.emailButtonElement
+    }, mainElement)
+
+    const emailElement = createElement("p", {
+        innerText: person.eMail
+    }, emailElementWrapper)
+}
+
+const renderEditContact = (person) => {
+    console.log(person)
+}
 //
 
 // VIEWS
@@ -595,7 +600,7 @@ const renderContacts = () => {
         const contactElement = createElement("button", {
             className: CLASS_NAMES.contact,
             innerText: `${person.firstName} ${person.lastName}`,
-            onclick: () => viewContact(person)
+            onclick: () => renderContact(person)
         })
 
         contactsWrapperElement.append(contactElement)
