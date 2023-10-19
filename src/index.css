@@ -7,12 +7,17 @@ body {
     justify-content: center;
 }
 
-
 #app {
     border: 2px solid black;
     height: 900px;
     width: 40%;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#app>main {
+    height: 100%;
 }
 
 #keypad-tab>header,
@@ -66,6 +71,7 @@ body {
     flex-direction: column;
     padding: 20px;
     gap: 10px;
+    height: 100%;
 }
 
 #dial-button-pad {
@@ -88,9 +94,10 @@ body {
     gap: 10px;
 }
 
-/* Why is this  ot working? */
 #keypad-tab>main {
-    gap: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 #call-button {
@@ -227,8 +234,8 @@ body {
 }
 
 #contacts-tab>header,
-#render-contact-tab>header,
-#render-edit-contact-tab {
+#contact-tab>header,
+#edit-contact-tab>header {
     border: 2px solid blue;
     height: 100px;
     display: flex;
@@ -256,7 +263,6 @@ body {
 
 #contacts-tab>main {
     border: 2px solid red;
-    height: 100px;
     display: flex;
     flex-direction: column;
 }
@@ -313,7 +319,7 @@ body {
     justify-content: center;
 }
 
-#render-contact-tab>main {
+#contact-tab>main {
     border: 2px solid green;
     display: flex;
     justify-content: center;
