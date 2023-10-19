@@ -112,7 +112,6 @@ body {
 }
 
 .dial-values {
-    /* font-weight: bold; */
     font-size: 40px;
     margin: 0;
 }
@@ -228,7 +227,8 @@ body {
 }
 
 #contacts-tab>header,
-#view-contact-tab>header {
+#render-contact-tab>header,
+#render-edit-contact-tab {
     border: 2px solid blue;
     height: 100px;
     display: flex;
@@ -313,7 +313,7 @@ body {
     justify-content: center;
 }
 
-#view-contact-tab>main {
+#render-contact-tab>main {
     border: 2px solid green;
     display: flex;
     justify-content: center;

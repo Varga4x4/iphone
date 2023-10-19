@@ -68,7 +68,12 @@ const IN_CALL_BUTTONS_ARRAY = [
     }
 ]
 
-const CONTACTS = []
+const CONTACTS = [{
+    lastName: "Steve",
+    phoneNumber: "07885569745",
+    eMail: "example@exp.com",
+    firstName: "Example",
+},]
 
 const CLASS_NAMES = {
     // ADD_CONTACT_MODAL
@@ -154,7 +159,7 @@ const ELEMENT_IDS = {
     //
 
     // RENDER_CONTACT_TAB
-    viewContact: "view-contact-tab",
+    contactTab: "render-contact-tab",
     contactPhoto: "contact-photo",
     contactName: "contact-name",
     contactContactOptionsButtonsWrapper: "contact-contact-options-buttons-wrapper",
@@ -163,6 +168,9 @@ const ELEMENT_IDS = {
     contactPhoneNumber: "contact-phone-number",
     //
 
+    // RENDER_EDIT_CONTACT
+    editContactTab: "render-edit-contact-tab",
+    //
     app: "app",
 }
 
@@ -242,7 +250,6 @@ const deleteButtonElement = document.getElementById(ELEMENT_IDS.deleteButton)
 const dialButtonPadElement = document.getElementById(ELEMENT_IDS.dialButtonPad)
 const favouritesButtonElement = document.getElementById(ELEMENT_IDS.favouritesTabButton)
 const appfooterElement = document.querySelector(`#${ELEMENT_IDS.app} > footer`)
-const viewContactElement = document.getElementById(ELEMENT_IDS.viewContact)
 const headerElement = document.getElementById(ELEMENT_IDS.header)
 const keypadButtonElement = document.getElementById(ELEMENT_IDS.keypadTabButton)
 const mainElement = document.getElementById(ELEMENT_IDS.main)
@@ -257,6 +264,8 @@ const favouritesTabElement = document.getElementById(ELEMENT_IDS.favouritesTab)
 const keypadTabElement = document.getElementById(ELEMENT_IDS.keypadTab)
 const recentsTabElement = document.getElementById(ELEMENT_IDS.recentsTab)
 const voicemailTabElement = document.getElementById(ELEMENT_IDS.voicemailTab)
+const renderContactTabElement = document.getElementById(ELEMENT_IDS.contactTab)
+const renderEditContactTabElement = document.getElementById(ELEMENT_IDS.editContactTab)
 ////
 //
 
@@ -276,10 +285,13 @@ const removeElementsOnTabChange = (tabName) => {
     const allTabIds = Object.entries(ELEMENT_IDS)
         .filter(entry => entry[0].endsWith('Tab'))
         .map(entry => entry[1])
+    console.log(allTabIds)
     const tabNameIdValue = ELEMENT_IDS[`${tabName}Tab`]
+    console.log(tabNameIdValue)
 
     allTabIds.forEach(id => {
         const tabElement = document.getElementById(id)
+        console.log(tabElement)
         tabElement.style.display = tabNameIdValue === id ? 'flex' : 'none'
         tabElement.innerHTML = ''
     })
@@ -327,8 +339,6 @@ const createGlobalHeader = ({ headerTitle, button1Label, button1OnClick, button2
         onclick: button2OnClick
     }, headerElement)
 }
-
-
 //
 
 // MODULES
@@ -346,7 +356,7 @@ const renderCall = (displayedPhoneNumber) => {
 
     createElement('p', {
         id: ELEMENT_IDS.inCallTabHeaderDisplay,
-        innerText: displayedPhoneNumber
+        innerText: displayedPhoneNumber,
     }, headerElement)
 
     createElement('p', {
@@ -476,25 +486,30 @@ const renderAddContactModal = () => {
 }
 
 const renderContact = (person) => {
-    handleFooterElementOnClick("view-contact")
-    removeElementsOnTabChange("view-contact")
+    handleFooterElementOnClick("render-contact-tab")
+
+    // TODO: Check this one on call with Presh
+    removeElementsOnTabChange("render-contact-tab")
     createGlobalHeader({
         headerTitle: "",
         button1Label: INNER_TEXTS.backButtonElement,
         button1OnClick: renderContacts,
         button2Label: INNER_TEXTS.editButtonElement,
         button2OnClick: () => renderEditContact(person),
-        parentElement: viewContactElement
+        parentElement: renderContactTabElement
     })
 
     // MAIN
-    const mainElement = createElement("main", undefined, viewContactElement)
+    const mainElement = createElement("main", undefined, renderContactTabElement)
 
     const contactNameElement = createElement("p", {
         id: ELEMENT_IDS.contactName,
         innerText: `${person.firstName} ${person.lastName}`,
     }, mainElement)
 
+    const savedContactName = contactNameElement.innerText
+
+    // TODO: Check this one on call with Presh
     const photoElement = createElement("div", {
         id: ELEMENT_IDS.contactPhoto,
         innerText: contactNameElement.innerText.slice(0, 1)
@@ -514,7 +529,7 @@ const renderContact = (person) => {
     const callContactButtonElement = createElement("button", {
         className: CLASS_NAMES.contactContactOptionsButton,
         innerText: INNER_TEXTS.dialValuesCall,
-        onclick: () => renderCall(savedPhoneNumber),
+        onclick: () => renderCall(savedContactName),
     }, contactContactOptionsButtonsWrapperElement)
 
     const videoCallContactButtonElement = createElement("button", {
@@ -551,6 +566,47 @@ const renderContact = (person) => {
 
 const renderEditContact = (person) => {
     console.log(person)
+
+    handleFooterElementOnClick("render-edit-contact")
+    removeElementsOnTabChange("render-edit-contact")
+    createGlobalHeader({
+        headerTitle: "",
+        button1Label: INNER_TEXTS.cancelButtonElement,
+        button1OnClick: renderContact,
+        button2Label: INNER_TEXTS.doneButttonElement,
+        button2OnClick: () => console.log("a"),
+        parentElement: renderEditContactTabElement
+    })
+
+    // MAIN
+    const mainElement = createElement("main", undefined, renderEditContactTabElement)
+
+    //// ADD PHOTO
+    const addPhotoElementWrapper = createElement("div", {
+        id: ELEMENT_IDS.addPhotoWrapper
+    }, mainElement)
+
+    createElement('button', {
+        innerText: INNER_TEXTS.addPhotoElement,
+        id: ELEMENT_IDS.addPhoto,
+        onclick: () => console.log("Select photo from Gallery")
+    }, addPhotoElementWrapper)
+    ////
+
+    // TODO: when fields has some values, then DONE button should be on/off
+    INPUTS.forEach((input) => {
+        const inputElement = createElement("input", {
+            id: input.id,
+            className: input.className
+        }, mainElement)
+
+        if (input.placeholder) {
+            inputElement.placeholder = input.placeholder
+        }
+
+        inputElement.setAttribute("type", input.attribute)
+    })
+    // 
 }
 //
 
