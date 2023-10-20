@@ -1,3 +1,5 @@
+const CONTACTS_LOCAL_STORAGE_KEY = "ContactsMemory"
+
 // CONSTANTS
 const DIAL_BUTTONS_ARRAY = [
     {
@@ -68,13 +70,6 @@ const IN_CALL_BUTTONS_ARRAY = [
     }
 ]
 
-const CONTACTS = [{
-    lastName: "Steve",
-    phoneNumber: "07885569745",
-    eMail: "example@exp.com",
-    firstName: "Example",
-},]
-
 const CLASS_NAMES = {
     // ADD_CONTACT_MODAL
     contact: "contact-element",
@@ -94,7 +89,7 @@ const CLASS_NAMES = {
     headerTitle: "header-title",
     //
 
-    // RENDER_CONTACT_TAB
+    // CONTACT_TAB
     contactContactOptionsButton: "contact-contact-options-button",
     //
 }
@@ -158,8 +153,8 @@ const ELEMENT_IDS = {
     inCallTabHeaderDisplay: "in-call-header-display",
     //
 
-    // RENDER_CONTACT_TAB
-    contactTab: "render-contact-tab",
+    // CONTACT_TAB
+    contactTab: "contact-tab",
     contactPhoto: "contact-photo",
     contactName: "contact-name",
     contactContactOptionsButtonsWrapper: "contact-contact-options-buttons-wrapper",
@@ -168,8 +163,8 @@ const ELEMENT_IDS = {
     contactPhoneNumber: "contact-phone-number",
     //
 
-    // RENDER_EDIT_CONTACT
-    editContactTab: "render-edit-contact-tab",
+    // EDIT_CONTACT
+    editContactTab: "edit-contact-tab",
     //
     app: "app",
 }
@@ -264,8 +259,8 @@ const favouritesTabElement = document.getElementById(ELEMENT_IDS.favouritesTab)
 const keypadTabElement = document.getElementById(ELEMENT_IDS.keypadTab)
 const recentsTabElement = document.getElementById(ELEMENT_IDS.recentsTab)
 const voicemailTabElement = document.getElementById(ELEMENT_IDS.voicemailTab)
-const renderContactTabElement = document.getElementById(ELEMENT_IDS.contactTab)
-const renderEditContactTabElement = document.getElementById(ELEMENT_IDS.editContactTab)
+const contactTabElement = document.getElementById(ELEMENT_IDS.contactTab)
+const editContactTabElement = document.getElementById(ELEMENT_IDS.editContactTab)
 ////
 //
 
@@ -282,16 +277,19 @@ const handleFooterElementOnClick = (tabName) => {
 }
 
 const removeElementsOnTabChange = (tabName) => {
+    console.log(tabName)
     const allTabIds = Object.entries(ELEMENT_IDS)
         .filter(entry => entry[0].endsWith('Tab'))
         .map(entry => entry[1])
     console.log(allTabIds)
+
+    // edit-contactTab
     const tabNameIdValue = ELEMENT_IDS[`${tabName}Tab`]
     console.log(tabNameIdValue)
 
+
     allTabIds.forEach(id => {
         const tabElement = document.getElementById(id)
-        console.log(tabElement)
         tabElement.style.display = tabNameIdValue === id ? 'flex' : 'none'
         tabElement.innerHTML = ''
     })
@@ -349,7 +347,7 @@ const renderCall = (displayedPhoneNumber) => {
     removeElementsOnTabChange('call')
 
     appfooterElement.style.visibility = "hidden"
-    appElement.style.background = "darkgrey"
+    callTabElement.style.background = "darkgrey"
 
     // HEADER
     const headerElement = createElement('header', undefined, callTabElement)
@@ -417,7 +415,13 @@ const renderAddContactModal = () => {
                 eMail: emailElement.value,
                 firstName: firstNameElement.value,
             }
-            CONTACTS.push(newContact)
+
+            const previousContactsString = window.localStorage.getItem(CONTACTS_LOCAL_STORAGE_KEY)
+            const previousContacts = previousContactsString ? JSON.parse(previousContactsString) : []
+
+            const contacts = [...previousContacts, newContact]
+            const contactsString = JSON.stringify(contacts)
+            window.localStorage.setItem(CONTACTS_LOCAL_STORAGE_KEY, contactsString)
 
             modalElement.remove()
         },
@@ -486,42 +490,38 @@ const renderAddContactModal = () => {
 }
 
 const renderContact = (person) => {
-    handleFooterElementOnClick("render-contact-tab")
-
-    // TODO: Check this one on call with Presh
-    removeElementsOnTabChange("render-contact-tab")
+    handleFooterElementOnClick("contact")
+    removeElementsOnTabChange("contact")
     createGlobalHeader({
         headerTitle: "",
         button1Label: INNER_TEXTS.backButtonElement,
         button1OnClick: renderContacts,
         button2Label: INNER_TEXTS.editButtonElement,
         button2OnClick: () => renderEditContact(person),
-        parentElement: renderContactTabElement
+        parentElement: contactTabElement
     })
 
     // MAIN
-    const mainElement = createElement("main", undefined, renderContactTabElement)
+    const mainElement = createElement("main", undefined, contactTabElement)
+
+    const alfa = `${person.firstName} ${person.lastName}`
+
+    const photoElement = createElement("div", {
+        id: ELEMENT_IDS.contactPhoto,
+        innerText: alfa.slice(0, 1)
+    }, mainElement)
 
     const contactNameElement = createElement("p", {
         id: ELEMENT_IDS.contactName,
-        innerText: `${person.firstName} ${person.lastName}`,
+        innerText: alfa,
     }, mainElement)
-
-    const savedContactName = contactNameElement.innerText
-
-    // TODO: Check this one on call with Presh
-    const photoElement = createElement("div", {
-        id: ELEMENT_IDS.contactPhoto,
-        innerText: contactNameElement.innerText.slice(0, 1)
-    })
-
-    mainElement.insertBefore(photoElement, contactNameElement)
 
     const contactContactOptionsButtonsWrapperElement = createElement("div", {
         id: ELEMENT_IDS.contactContactOptionsButtonsWrapper
     }, mainElement)
 
-    const messageButtonElement = createElement("button", {
+    // MESSAGE_BUTTON_ELEMENT 
+    createElement("button", {
         className: CLASS_NAMES.contactContactOptionsButton,
         innerText: INNER_TEXTS.messageButtonElement,
     }, contactContactOptionsButtonsWrapperElement)
@@ -529,7 +529,7 @@ const renderContact = (person) => {
     const callContactButtonElement = createElement("button", {
         className: CLASS_NAMES.contactContactOptionsButton,
         innerText: INNER_TEXTS.dialValuesCall,
-        onclick: () => renderCall(savedContactName),
+        onclick: () => renderCall(contactNameElement.innerText),
     }, contactContactOptionsButtonsWrapperElement)
 
     const videoCallContactButtonElement = createElement("button", {
@@ -567,19 +567,19 @@ const renderContact = (person) => {
 const renderEditContact = (person) => {
     console.log(person)
 
-    handleFooterElementOnClick("render-edit-contact")
-    removeElementsOnTabChange("render-edit-contact")
+    handleFooterElementOnClick("editContact")
+    removeElementsOnTabChange("editContact")
     createGlobalHeader({
         headerTitle: "",
         button1Label: INNER_TEXTS.cancelButtonElement,
         button1OnClick: renderContact,
         button2Label: INNER_TEXTS.doneButttonElement,
         button2OnClick: () => console.log("a"),
-        parentElement: renderEditContactTabElement
+        parentElement: editContactTabElement
     })
 
     // MAIN
-    const mainElement = createElement("main", undefined, renderEditContactTabElement)
+    const mainElement = createElement("main", undefined, editContactTabElement)
 
     //// ADD PHOTO
     const addPhotoElementWrapper = createElement("div", {
@@ -652,7 +652,9 @@ const renderContacts = () => {
         id: ELEMENT_IDS.contactsWrapper
     })
 
-    CONTACTS.forEach((person) => {
+    const contactsStrig = window.localStorage.getItem(CONTACTS_LOCAL_STORAGE_KEY)
+    const contacts = contactsStrig ? JSON.parse(contactsStrig) : []
+    contacts.forEach((person) => {
         const contactElement = createElement("button", {
             className: CLASS_NAMES.contact,
             innerText: `${person.firstName} ${person.lastName}`,
