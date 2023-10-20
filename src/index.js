@@ -161,12 +161,15 @@ const ELEMENT_IDS = {
     contactPhoneNumberWrapper: "contact-phone-number-wrapper",
     contactEmailWrapper: "contact-email-wrapper",
     contactPhoneNumber: "contact-phone-number",
+    contactPhotoElementWrapper: "contact-photo-element-wrapper",
     //
 
     // EDIT_CONTACT
     editContactTab: "edit-contact-tab",
+    deleteContactButton: "delete-contact-button",
     //
     app: "app",
+    scroller: "scroller",
 }
 
 const INPUTS = [
@@ -233,6 +236,10 @@ const INNER_TEXTS = {
     emailButtonElement: "Email",
     phoneNumberElement: "Phone",
     //
+
+    // EDIT_CONTACT_TAB
+    deleteContactButton: "Delete Contact"
+    //
 }
 //
 
@@ -277,16 +284,12 @@ const handleFooterElementOnClick = (tabName) => {
 }
 
 const removeElementsOnTabChange = (tabName) => {
-    console.log(tabName)
     const allTabIds = Object.entries(ELEMENT_IDS)
         .filter(entry => entry[0].endsWith('Tab'))
         .map(entry => entry[1])
-    console.log(allTabIds)
 
     // edit-contactTab
     const tabNameIdValue = ELEMENT_IDS[`${tabName}Tab`]
-    console.log(tabNameIdValue)
-
 
     allTabIds.forEach(id => {
         const tabElement = document.getElementById(id)
@@ -346,7 +349,7 @@ const renderCall = (displayedPhoneNumber) => {
     handleFooterElementOnClick("call")
     removeElementsOnTabChange('call')
 
-    appfooterElement.style.visibility = "hidden"
+    appfooterElement.remove()
     callTabElement.style.background = "darkgrey"
 
     // HEADER
@@ -381,7 +384,7 @@ const renderCall = (displayedPhoneNumber) => {
         id: ELEMENT_IDS.endButton,
         className: CLASS_NAMES.dialButton,
         onclick: () => {
-            appfooterElement.style.visibility = "visible"
+            app.append(appfooterElement)
             renderKeypad()
         }
     }, footerElement)
@@ -424,6 +427,7 @@ const renderAddContactModal = () => {
             window.localStorage.setItem(CONTACTS_LOCAL_STORAGE_KEY, contactsString)
 
             modalElement.remove()
+            renderContacts()
         },
         parentElement: modalElement
     })
@@ -504,16 +508,20 @@ const renderContact = (person) => {
     // MAIN
     const mainElement = createElement("main", undefined, contactTabElement)
 
-    const alfa = `${person.firstName} ${person.lastName}`
+    const personName = `${person.firstName} ${person.lastName}`
 
-    const photoElement = createElement("div", {
-        id: ELEMENT_IDS.contactPhoto,
-        innerText: alfa.slice(0, 1)
+    const contactPhotoElementWrapper = createElement("div", {
+        id: ELEMENT_IDS.contactPhotoElementWrapper,
     }, mainElement)
+
+    const contactPhotoElement = createElement("div", {
+        id: ELEMENT_IDS.contactPhoto,
+        innerText: personName.slice(0, 1)
+    }, contactPhotoElementWrapper)
 
     const contactNameElement = createElement("p", {
         id: ELEMENT_IDS.contactName,
-        innerText: alfa,
+        innerText: personName,
     }, mainElement)
 
     const contactContactOptionsButtonsWrapperElement = createElement("div", {
@@ -565,35 +573,40 @@ const renderContact = (person) => {
 }
 
 const renderEditContact = (person) => {
-    console.log(person)
-
     handleFooterElementOnClick("editContact")
     removeElementsOnTabChange("editContact")
     createGlobalHeader({
         headerTitle: "",
         button1Label: INNER_TEXTS.cancelButtonElement,
-        button1OnClick: renderContact,
+        button1OnClick: () => renderContact(person),
         button2Label: INNER_TEXTS.doneButttonElement,
-        button2OnClick: () => console.log("a"),
+        button2OnClick: () => console.log("This will edit the saved contact details"),
         parentElement: editContactTabElement
     })
 
     // MAIN
     const mainElement = createElement("main", undefined, editContactTabElement)
 
+    const personName = `${person.firstName} ${person.lastName}`
+
     //// ADD PHOTO
-    const addPhotoElementWrapper = createElement("div", {
-        id: ELEMENT_IDS.addPhotoWrapper
+    const contactPhotoElementWrapper = createElement("div", {
+        id: ELEMENT_IDS.contactPhotoElementWrapper,
     }, mainElement)
+
+    const contactPhotoElement = createElement("div", {
+        id: ELEMENT_IDS.contactPhoto,
+        innerText: personName.slice(0, 1)
+    }, contactPhotoElementWrapper)
 
     createElement('button', {
         innerText: INNER_TEXTS.addPhotoElement,
         id: ELEMENT_IDS.addPhoto,
         onclick: () => console.log("Select photo from Gallery")
-    }, addPhotoElementWrapper)
+    }, contactPhotoElementWrapper)
     ////
 
-    // TODO: when fields has some values, then DONE button should be on/off
+    // TODO: fill up inputs with person data
     INPUTS.forEach((input) => {
         const inputElement = createElement("input", {
             id: input.id,
@@ -606,7 +619,12 @@ const renderEditContact = (person) => {
 
         inputElement.setAttribute("type", input.attribute)
     })
-    // 
+
+    const deleteContactButton = createElement("button", {
+        id: ELEMENT_IDS.deleteContactButton,
+        innerText: INNER_TEXTS.deleteContactButton,
+        onclick: () => console.log("This will delete the contact from memory")
+    }, editContactTabElement)
 }
 //
 
@@ -652,6 +670,10 @@ const renderContacts = () => {
         id: ELEMENT_IDS.contactsWrapper
     })
 
+    const scroller = createElement("div", {
+        id: ELEMENT_IDS.scroller
+    }, contactsWrapperElement)
+
     const contactsStrig = window.localStorage.getItem(CONTACTS_LOCAL_STORAGE_KEY)
     const contacts = contactsStrig ? JSON.parse(contactsStrig) : []
     contacts.forEach((person) => {
@@ -661,7 +683,7 @@ const renderContacts = () => {
             onclick: () => renderContact(person)
         })
 
-        contactsWrapperElement.append(contactElement)
+        scroller.append(contactElement)
     }, contactsWrapperElement)
 
     mainElement.append(contactsWrapperElement)
