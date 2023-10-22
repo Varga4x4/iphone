@@ -127,7 +127,7 @@ body {
     margin: 0;
 }
 
-#in-call-options-button {
+#call-tab>main>.dial-button {
     font-weight: bold;
     color: white;
     background: black;
