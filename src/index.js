@@ -157,6 +157,8 @@ const ELEMENT_IDS = {
     inCallFooter: "in-call-footer",
     inCallOptionsButton: "in-call-options-button",
     inCallTabHeaderDisplay: "in-call-header-display",
+    hideButton: "hide-button",
+
     //
 
     // CONTACT_TAB
@@ -225,6 +227,7 @@ const INNER_TEXTS = {
     // IN_CALL_TAB
     callHeader: "Calling...",
     endButtonElement: "End",
+    hideButtonElement: "Hide",
     //
 
     // CREATE_HEADER_FUNCTION
@@ -389,21 +392,37 @@ const renderCall = (displayedPhoneNumber) => {
         }, mainElement)
     })
 
-    const renderInCallDisplay = () => {
-        console.log("a")
-    }
-
     const inCallKeypad = document.getElementById("in-call-keypad")
     inCallKeypad.onclick = () => {
         IN_CALL_BUTTONS_ARRAY.forEach((button) => {
             removeButtons()
         })
 
+        const renderInCallTabHeaderDisplay = (numberToAdd) => {
+            const oldValue = inCallTabHeaderDisplayElement.innerText
+
+            let newValue
+            if (numberToAdd) {
+                newValue = oldValue + numberToAdd
+            }
+
+            if (newValue.length) {
+                inCallTabHeaderDisplayElement.innerText = newValue
+            }
+        }
+
+        const hideButtonElement = createElement('button', {
+            id: ELEMENT_IDS.hideButton,
+            className: CLASS_NAMES.dialButton,
+            innerText: INNER_TEXTS.hideButtonElement,
+            onclick: () => inCallTabHeaderDisplayElement.innerText = displayedPhoneNumber
+        }, footerElement)
+
         DIAL_BUTTONS_ARRAY.forEach((button) => {
             const dialButtonElement = createElement("button", {
                 className: CLASS_NAMES.dialButton,
                 id: ELEMENT_IDS.dialButton,
-                onclick: () => renderInCallDisplay()
+                onclick: () => renderInCallTabHeaderDisplay(buttonValueElement.innerText)
             }, mainElement)
 
             const buttonValueElement = createElement('p', {
