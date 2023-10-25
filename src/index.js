@@ -51,21 +51,27 @@ const DIAL_BUTTONS_ARRAY = [
 
 const IN_CALL_BUTTONS_ARRAY = [
     {
+        id: "mute",
         value: "mute"
     },
     {
+        id: "in-call-keypad",
         value: "keypad"
     },
     {
+        id: "speaker",
         value: "speaker"
     },
     {
+        id: "add-call",
         value: "add call"
     },
     {
+        id: "face-time",
         value: "FaceTime"
     },
     {
+        id: "in-call-contacts",
         value: "contacts"
     }
 ]
@@ -340,6 +346,13 @@ const createGlobalHeader = ({ headerTitle, button1Label, button1OnClick, button2
         onclick: button2OnClick
     }, headerElement)
 }
+
+const removeButtons = (element) => {
+    element = document.querySelector("button")
+    if (element) {
+        element.remove()
+    }
+}
 //
 
 // MODULES
@@ -355,7 +368,7 @@ const renderCall = (displayedPhoneNumber) => {
     // HEADER
     const headerElement = createElement('header', undefined, callTabElement)
 
-    createElement('p', {
+    const inCallTabHeaderDisplayElement = createElement('p', {
         id: ELEMENT_IDS.inCallTabHeaderDisplay,
         innerText: displayedPhoneNumber,
     }, headerElement)
@@ -370,11 +383,42 @@ const renderCall = (displayedPhoneNumber) => {
     const mainElement = createElement('main', undefined, callTabElement)
     IN_CALL_BUTTONS_ARRAY.forEach((button) => {
         createElement("button", {
-            id: ELEMENT_IDS.inCallOptionsButton,
+            id: button.id,
             className: CLASS_NAMES.dialButton,
             innerText: button.value
         }, mainElement)
     })
+
+    const renderInCallDisplay = () => {
+        console.log("a")
+    }
+
+    const inCallKeypad = document.getElementById("in-call-keypad")
+    inCallKeypad.onclick = () => {
+        IN_CALL_BUTTONS_ARRAY.forEach((button) => {
+            removeButtons()
+        })
+
+        DIAL_BUTTONS_ARRAY.forEach((button) => {
+            const dialButtonElement = createElement("button", {
+                className: CLASS_NAMES.dialButton,
+                id: ELEMENT_IDS.dialButton,
+                onclick: () => renderInCallDisplay()
+            }, mainElement)
+
+            const buttonValueElement = createElement('p', {
+                innerText: button.value,
+                className: CLASS_NAMES.dialValues
+            }, dialButtonElement)
+
+            if (button.characters !== undefined) {
+                createElement('p', {
+                    id: ELEMENT_IDS.buttonCharacters,
+                    innerText: button.characters
+                }, dialButtonElement)
+            }
+        })
+    }
     //
 
     // FOOTER
@@ -619,6 +663,18 @@ const renderEditContact = (person) => {
 
         inputElement.setAttribute("type", input.attribute)
     })
+
+    const editFirstName = document.getElementById("first-name")
+    editFirstName.value = person.firstName
+
+    const editLastName = document.getElementById("last-name")
+    editLastName.value = person.lastName
+
+    const editPhoneNumber = document.getElementById("add-phone-number")
+    editPhoneNumber.value = person.phoneNumber
+
+    const editEmail = document.getElementById("email")
+    editEmail.value = person.eMail
 
     const deleteContactButton = createElement("button", {
         id: ELEMENT_IDS.deleteContactButton,
