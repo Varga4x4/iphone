@@ -227,7 +227,7 @@ body {
 }
 
 .contact-element {
-    font-size: larger;
+    font-size: 150px;
     font-weight: bold;
     display: flex;
     align-items: flex-start;
@@ -238,6 +238,7 @@ body {
 #edit-contact-tab>header {
     border: 2px solid blue;
     height: 100px;
+    width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -265,6 +266,7 @@ body {
     border: 2px solid red;
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 #search-field {
@@ -276,6 +278,7 @@ body {
 
 #contacts-tab {
     flex-direction: column;
+    gap: 10px;
 }
 
 #voicemail-button,
@@ -287,6 +290,7 @@ body {
 #call-tab {
     border: 2px solid gold;
     flex-direction: column;
+    height: 100%;
     gap: 100px
 }
 
@@ -299,12 +303,30 @@ body {
     gap: 10px;
 }
 
+#contact-tab>main {
+    border: 2px solid rebeccapurple;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+}
+
+#contact-photo-element-wrapper {
+    border: 2px solid red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
 #contact-photo {
     border: 2px solid blue;
     border-radius: 100%;
     background: lightblue;
     height: 200px;
-    width: 50%;
+    width: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -319,7 +341,7 @@ body {
     justify-content: center;
 }
 
-#contact-tab>main {
+#contact-tab {
     border: 2px solid green;
     display: flex;
     justify-content: center;
@@ -353,4 +375,30 @@ body {
 #contact-phone-number-wrapper>p,
 #contact-email-wrapper>p {
     margin: 0;
+}
+
+#edit-contact-tab {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#edit-contact-tab>main {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#scroller {
+    overflow: scroll;
+    height: 640px;
+    width: 100%;
+}
+
+#delete-contact-button {
+    color: red;
+    width: 400px;
+    font-size: 30px;
+    display: flex;
+    justify-content: flex-start;
 }
