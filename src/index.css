@@ -209,7 +209,8 @@ body {
     gap: 10px;
 }
 
-#contacts-wrapper {
+#contacts-wrapper,
+#favourites-wrapper-element {
     border: 2px solid blue;
     display: flex;
     flex-direction: column;
@@ -229,7 +230,8 @@ body {
 
 #contacts-tab>header,
 #contact-tab>header,
-#edit-contact-tab>header {
+#edit-contact-tab>header,
+#favourites-tab>header {
     border: 2px solid blue;
     height: 100px;
     width: 100%;
@@ -334,7 +336,8 @@ body {
     justify-content: center;
 }
 
-#contact-tab {
+#contact-tab,
+#favourites-tab {
     border: 2px solid green;
     display: flex;
     justify-content: center;
@@ -392,6 +395,11 @@ body {
     color: red;
     width: 400px;
     font-size: 30px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#add-to-favourites-button {
     display: flex;
     justify-content: flex-start;
 }

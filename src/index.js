@@ -128,6 +128,7 @@ const ELEMENT_IDS = {
     // FAVOURITES_TAB
     favouritesTab: "favourites-tab",
     favouritesTabButton: "favourites-button",
+    favouriteContactsWrapperElement: "favourites-wrapper-element",
     //
 
     // VOICEMAIL_TAB
@@ -154,6 +155,7 @@ const ELEMENT_IDS = {
     // IN_CALL_TAB
     endButton: "end-button",
     endButtonElementWrapper: "end-button-element-wrapper",
+    inCallContacts: "in-call-contacts",
     inCallFooter: "in-call-footer",
     inCallOptionsButton: "in-call-options-button",
     inCallTabHeaderDisplay: "in-call-header-display",
@@ -175,6 +177,7 @@ const ELEMENT_IDS = {
     // EDIT_CONTACT
     editContactTab: "edit-contact-tab",
     deleteContactButton: "delete-contact-button",
+    addToFavouritesButton: "add-to-favourites-button",
     //
     app: "app",
     scroller: "scroller",
@@ -247,7 +250,12 @@ const INNER_TEXTS = {
     //
 
     // EDIT_CONTACT_TAB
-    deleteContactButton: "Delete Contact"
+    deleteContactButton: "Delete Contact",
+    addToFavouritesButton: "Add to favourites",
+    //
+
+    // FAVOURITES_TAB
+    favouritesTitleElement: "Favourites"
     //
 }
 //
@@ -437,6 +445,13 @@ const renderCall = (displayedPhoneNumber) => {
                 }, dialButtonElement)
             }
         })
+    }
+
+    const inCallContacts = document.getElementById(ELEMENT_IDS.inCallContacts)
+    inCallContacts.onclick = () => {
+        appElement.append(appfooterElement)
+        removeElementsOnTabChange("contacts")
+        renderContacts()
     }
     //
 
@@ -633,6 +648,12 @@ const renderContact = (person) => {
     const emailElement = createElement("p", {
         innerText: person.eMail
     }, emailElementWrapper)
+
+    const addToFavouritesButton = createElement("button", {
+        id: ELEMENT_IDS.addToFavouritesButton,
+        innerText: INNER_TEXTS.addToFavouritesButton,
+        onclick: () => renderFavourites()
+    }, mainElement)
 }
 
 const renderEditContact = (person) => {
@@ -720,7 +741,6 @@ const renderContacts = () => {
     const mainElement = createElement("main", undefined, contactsTabElement)
 
     //// SEARCH
-    // TODO: improve styling
     const searchWrapperElement = createElement('div', {
         id: ELEMENT_IDS.contactsTabSearchWrapper
     }, mainElement)
@@ -767,8 +787,21 @@ const renderContacts = () => {
 }
 
 const renderFavourites = () => {
+    console.log("This will show favourites")
     handleFooterElementOnClick("favourites")
     removeElementsOnTabChange("favourites")
+    createGlobalHeader({
+        headerTitle: INNER_TEXTS.favouritesTitleElement,
+        button1Label: INNER_TEXTS.plusButtonElement,
+        button1OnClick: renderContacts,
+        button2Label: INNER_TEXTS.editButtonElement,
+        button2OnClick: console.log("This will edit the favourites"),
+        parentElement: favouritesTabElement
+    })
+
+    const favouriteContactsWrapperElement = createElement("main", {
+        id: ELEMENT_IDS.favouriteContactsWrapperElement,
+    }, favouritesTabElement)
 }
 
 const renderRecents = () => {
