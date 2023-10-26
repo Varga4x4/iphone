@@ -741,7 +741,6 @@ const renderContacts = () => {
     const mainElement = createElement("main", undefined, contactsTabElement)
 
     //// SEARCH
-    // TODO: improve styling
     const searchWrapperElement = createElement('div', {
         id: ELEMENT_IDS.contactsTabSearchWrapper
     }, mainElement)
